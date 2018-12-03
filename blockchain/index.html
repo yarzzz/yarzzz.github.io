@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .outer {
+        width: 1200px;
+        height: 640px;
+        margin-top: 10%;
+        margin-left: 14%;
+        padding: 10px;
+    }
+
+    .outer > div {
+        display: table-cell;
+        border: #00b1f1 1px solid;
+
+    }
+
+    .mybtn {
+        width: 100%;
+        height: 60px;
+        border: 0;
+        border-radius: 3px;
+        background-color: #1E9FFF;
+        color: white;
+        margin-bottom: 5px;
+    }
+
+    .mybtn:hover {
+        background-color: #45C2E0;
+    }
+
+    .bodyLeft, .bodyRight {
+        width: 280px;
+        height: 640px;
+        border-radius: 3px;
+    }
+
+    .bodyCenter {
+        width: 600px;
+        height: 640px;
+        border-right: 0;
+        border-left: 0;
+    }
+
+    .Trading_role, .Trading_info {
+        border: 0;
+        border-bottom: 1px solid #00b1f1;
+    }
+
+    .Trading_role {
+        width: 100%;
+        height: 200px;
+    }
+
+    .Trading_info {
+        width: 100%;
+        height: 300px;
+        border-bottom: 1px solid #00b1f1;
+        padding: 10px;
+        word-wrap: break-word;
+        word-break: break-all;
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+
+    .condition_info {
+        width: 100%;
+        height: 100px;
+        /*border: 1px #00b1f1 solid;*/
+    }
+    /*.role_ul{*/
+        /*margin-top: 20px;*/
+    /*}*/
+    .role_ul_li {
+        list-style: none;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        display: inline-block;
+        /*border: 1px #00b1f1 solid;*/
+        border-radius: 20px;
+        background-color: #00b1f1;
+        color: white;
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        margin-left: 80px;
+        position: relative;
+        background-position: -4px, 0;
+        background-size: 96px;
+    }
+
+    /*.role_ul_li:nth-child(7),.role_ul_li:nth-child(8){*/
+    /*opacity: 0;*/
+    /*}*/
+
+    .my_checkbox_input {
+        width: 40px;
+        height: 40px;
+        opacity: 0;
+        position: absolute;
+        left: 0px;
+        top: -2px;
+        z-index: 9999999;
+    }
+
+    .Trading_info p {
+        margin: 0 0 20px 80px;
+    }
+
+    .random {
+        margin-right: 30px;
+    }
+
+    /*.bodyRight_top {*/
+        /*height: 78%;*/
+        /*border: 0;*/
+    /*}*/
+
+    .bodyRight_top > button {
+        display: inline-block;
+        width: 100%;
+        height: 60px;
+        border: 0;
+        border-radius: 3px;
+        color: white;
+        background-color: #1E9FFF;
+        margin-bottom: 5px;
+    }
+
+    .bodyRight_top > button:hover {
+        background-color: #45C2E0;
+    }
+
+    /*.bodyRight_bottom {*/
+        /*height: 20.2%;*/
+    /*}*/
+
+    .bodyRight_bottom > button {
+        width: 100%;
+        height: 87%;
+        border: 0;
+        border-radius: 3px;
+        color: white;
+        background-color: #1E9FFF;
+        margin-bottom: 5px;
+    }
+
+    .bodyRight_bottom > button:hover {
+        background-color: #45C2E0;
+    }
+
+    .my_modal-dialog {
+        width: 500px;
+        margin: 22% auto;
+    }
+
+    /*.my_modal-content{*/
+    /*width: 500px;*/
+    /*}*/
+    .modal-body input {
+        margin: 10px 10px 10px 60px;
+        width: 350px;
+        height: 30px;
+    }
+
+    #pay_account {
+        margin: 10px 10px 10px 60px;
+        width: 350px;
+        height: 30px;
+    }
+    /*.bodyLeft>button,.bodyRight_top>button{*/
+        /*visibility:hidden*/
+    /*}*/
+    /*.bodyLeft_bottom{*/
+        /*width: 100%;*/
+        /*height: 15%;*/
+        /*border: 0;*/
+        /*border-radius: 3px;*/
+        /*color: white;*/
+        /*background-color: #1E9FFF;*/
+        /*margin-bottom: 5px;*/
+    /*}*/
+    /*.bodyLeft_bottom:hover {*/
+        /*background-color: #45C2E0;*/
+    /*}*/
+    .Tx_modal-dialog{
+        width: 500px;
+        height: 500px;
+        margin: 10% auto;
+    }
+    .Tx_modal-content{
+        width: 500px;
+        height: 500px;
+    }
+    .Tx_modal-body{
+        width: 100%;
+        height: 76%;
+    }
+    .account_content{
+        width: 100%;
+        height: 100%;
+        word-wrap: break-word;
+        word-break: break-all;
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+    .bodyLeft_top>button,.bodyRight_top>button{
+        visibility:hidden
+    }
+    .bodyLeft_bottom_btn{
+        width: 100%;
+        height: 100%;
+        border: 0;
+        border-radius: 3px;
+        color: white;
+        background-color: #1E9FFF;
+    }
+    .bodyLeft_bottom_btn:hover{
+        background-color: #45C2E0;
+    }
+    .bodyLeft_bottom,.bodyRight_bottom {
+        height: 20.2%;
+    }
+    .bodyLeft_top,.bodyRight_top {
+        height: 78%;
+        border: 0;
+    }
+    .bodyLeft_top{
+        word-wrap: break-word;
+        word-break: break-all;
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+
+</style>
+<div class="outer">
+    <div class="bodyLeft">
+        <div class="bodyLeft_top">
+            <button class="mybtn" data-target="#Modal" onclick="my_Modal()">创世区块</button>
+            <button class="mybtn" onclick="my_Modal()">aa区块</button></div>
+        <div class="bodyLeft_bottom">
+            <button class="bodyLeft_bottom_btn " onclick="createBlockByButton()">生成新区块</button>
+        </div>
+    </div>
+    <div class="bodyCenter">
+        <div class="Trading_role">
+            <ul class="role_ul">
+                <li class="role_ul_li"> <input id="role_ul_li_1" class="my_checkbox_input" type="checkbox">1</li>
+                <!--<li class="role_ul_li" ><input id="role_ul_li_2" class="my_checkbox_input" type="checkbox">2</li>-->
+                <!--<li class="role_ul_li" ><input id="role_ul_li_3" class="my_checkbox_input" type="checkbox">3</li>-->
+                <!--<li class="role_ul_li" ><input id="role_ul_li_4" class="my_checkbox_input" type="checkbox">4</li>-->
+                <!--<li class="role_ul_li" ><input id="role_ul_li_5" class="my_checkbox_input" type="checkbox">5</li>-->
+                <!--<li class="role_ul_li" ><input id="role_ul_li_6" class="my_checkbox_input" type="checkbox">6</li>-->
+
+            </ul>
+
+
+        </div>
+        <div class="Trading_info">
+            <!--<p><span class="random">0x128732197391adef23671861</span>余额:<span>$800</span></p>-->
+            <!--<p><span class="random">0x128732197391adef23671861</span>余额:<span>$800</span></p>-->
+            <!--<p><span class="random">0x128732197391adef23671861</span>余额:<span>$800</span></p>-->
+            <!--<p><span class="random">0x128732197391adef23671861</span>余额:<span>$800</span></p>-->
+            <!--<p><span class="random">0x128732197391adef23671861</span>余额:<span>$800</span></p>-->
+        </div>
+        <div class="condition_info">
+            <p>
+            状态信息:</br>
+            无</br>
+            </p>
+        </div>
+    </div>
+
+    <div class="bodyRight">
+        <div class="bodyRight_top">
+            <button id="create_account" onclick="create_account();">创建账户</button>
+            <button id=transaction" data-target="#myModal" onclick="transaction_click();">发起交易</button>
+            <button id="TxPool" data-target="#Tx_Modal" onclick="TxPoolModal();">查看交易池</button>
+            <button id="remove_peer" onclick="removePeer();">删去该节点</button>
+        </div>
+        <div class="bodyRight_bottom">
+            <button class="create_Node" onclick="create_Node()">创建节点</button>
+        </div>
+    </div>
+</div>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog my_modal-dialog">
+        <div class="modal-content my_modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">
+                    账户信息
+                </h4>
+            </div>
+            <div class="modal-body">
+                <select name="cars" id="pay_account">
+                    <!--<option value="volvo" selected="selected"><span-->
+                            <!--class="random">0x128732197391adef23671861</span>余额:<span>$800</span></option>-->
+                    <!--<option value="saab"><span class="random">0x128732197391adef23671862</span>余额:<span>$800</span>-->
+                    <!--</option>-->
+                    <!--<option value="fiat"><span class="random">0x128732197391adef23671863</span>余额:<span>$800</span>-->
+                    <!--</option>-->
+                </select>
+                <input id="collection_credited" type="text" placeholder="收款账户"/><br/>
+                <input id="transfer_amount" type="text" placeholder="转账金额"/><br/>
+                <input id="transfer_content" type="text" placeholder="转账内容"/><br/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    取消
+                </button>
+                <button type="button" class="btn btn-primary" onclick="submitTransaction()" data-dismiss="modal">
+                    提交
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- 模态框（Moda2） -->
+<div class="modal fade" id="Modal" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog Tx_modal-dialog">
+        <div class="modal-content Tx_modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="ModalLabel">区块信息</h4>
+            </div>
+            <div class="modal-body Tx_modal-body">
+               <div class="account_content" id="block_info"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    确认
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<!--模态框（TxPool_Modal）-->
+<div class="modal fade" id="Tx_Modal" role="dialog" aria-labelledby="Tx_ModalLabel" aria-hidden="true">
+    <div class="modal-dialog Tx_modal-dialog">
+        <div class="modal-content Tx_modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="Tx_ModalLabel">账户信息</h4>
+            </div>
+            <div class="modal-body Tx_modal-body">
+                <div class="account_content" id="tx_pool">
+                    <p>交易池：</p>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    确认
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+</body>
+<script src="sha1.js"></script>
+<script type="text/javascript">
+    var mystr = "";
+    var currentNodeIndex = 1;
+
+    var world = new World();
+
+    var block = null;
+
+    var selectedNodeIndex = 0;  // 选中的节点下标
+    var selectedBlockId = "";  // 选中的区块的uiid
+    var spreadingBlock = false;  // 标记区块是否正在扩散
+
+    // 核对交易是否能够发起
+    function checkTransaction(nIn, nOut, value) {
+        // 判断是否给自己转账
+        if (nIn == nOut) {
+            alert("无法给自己转账！");
+            return false;
+        }
+        // 核对输入金额为数字
+        if (isNaN(parseFloat(value))) {
+            alert("转账金额必须为数字！");
+            return false;
+        } else {
+            value = parseFloat(value);
+        }
+        // 核对转账金额
+        if (value <= 0) {
+            alert("转账金额必须大于0！");
+            return false;
+        }
+        if (nOut != "CoinBase") {
+            var nOutAccount = world.findAccount(nOut);
+            if (nOutAccount.balance < value) {
+                console.log(nOutAccount.balance);
+
+                alert("账户余额不足！");
+                return false;
+            }
+        }
+        // 判断收款账户存在
+        var nInAccount = world.findAccount(nIn);
+        if (!nInAccount) {
+            alert("收款账户不存在！");
+            return false;
+        }else {
+            return true;
+        }
+
+    }
+    // 选中节点后刷新账户界面，以及区块界面
+    function chooseNode() {
+        document.querySelector('.Trading_info').innerHTML="";
+        var selectedPeer = world.peers.get(selectedNodeIndex);
+        for (var accountWithName of selectedPeer.accounts) {
+            var account = accountWithName[1];
+            mystr = `
+            <p><span class="random">${account.name}</span>余额:<span>${account.balance}</span></p>
+            `;
+            $(".Trading_info").append(mystr);
+        }
+        document.querySelector('.bodyLeft_top').innerHTML="";
+        for (var blockWithBlockHeight of selectedPeer.blocks) {
+            var blockHeight = blockWithBlockHeight[0];
+            if (blockHeight == 0) {
+                mystr = `
+                <button class="mybtn" data-target="#Modal" onclick="my_Modal(id)" id="block_0">创世区块</button>
+                `;
+            }else {
+                mystr = `
+                <button class="mybtn" onclick="my_Modal(id)" id="block_${blockHeight}">第${blockHeight}个区块</button>
+                `;
+            }
+            $(".bodyLeft_top").append(mystr);
+        }
+        $(".bodyLeft_top>button").css({"visibility":"visible"});
+    }
+    // 清空账户界面，并取消选中
+    function cancelNode() {
+        document.querySelector('.Trading_info').innerHTML="";
+        selectedNodeIndex = 0;
+    }
+    // 交易类
+    function Transaction(nIn, nOut, value, content){
+        this.nIn = nIn;
+        this.nOut = nOut;
+        this.value = parseFloat(value);
+        this.content = content;
+        this.time = new Date().getTime();
+        this.hash = null;
+    }
+    // 区块类
+    function Block(transactionPool, preHash, height) {
+        this.height = height;
+        this.transactions = deepClone(transactionPool);
+        this.time = new Date().getTime();
+        this.nounce = 0;
+        this.preHash = preHash;
+        this.hash = "0000000000000000000000000000000000000000";
+    }
+    // 账户类
+    function Account(name) {
+        this.name = name;
+        this.balance = 0.0;
+        // 余额增加
+        this.increaseBalance = function(value) {
+            this.balance +=  parseFloat(value);
+        };
+        // 余额减少
+        this.decreaseBalance = function(value) {
+            this.balance -=  parseFloat(value);
+        };
+        // // 获取当前余额
+        // this.getBalance = function() {
+        //     return this.balance
+        // };
+    }
+
+    // 节点类
+    function Peer(blocks, peerId) {
+        this.id = peerId;
+        this.blocks = deepClone(blocks);
+        console.log(this.blocks);
+        this.accounts = new Map();
+        this.blockHeight = this.blocks.size;
+        // 交易池
+        this.transactionPool = new Array();
+        // 通过高度查询区块,返回区块对象
+        this.getBlock = function(height) {
+            return this.blocks.get(height);
+        };
+        // 增加block
+        this.addBlock = function(block) {
+            var myblock = deepClone(block);
+            this.blocks.set(this.blockHeight, myblock);
+            this.blockHeight ++;
+            // 如果交易池中的交易被该区块打包，则删去
+            for (var transInBlock of myblock.transactions) {
+                for (var i = 0; i < this.transactionPool.length; i++) {
+                    if (transInBlock.hash == this.transactionPool[i].hash) {
+                        this.transactionPool.splice(i);
+                        break;
+                    }
+                }
+
+            }
+        };
+        // 增加账户
+        this.addAccount = function(account) {
+            var name = account.name;
+            this.accounts.set(name, account);
+        };
+        // 创建新的账户并增加
+        this.createAccount = function() {
+            var name = SHA1(String(new Date().getTime()));
+            var account = new Account(name);
+            this.addAccount(account);
+        };
+        // 默认增加1个账户
+        this.createAccount();
+        // 生成新的交易
+        this.createTransaction = function(nIn, nOut, value, content) {
+            var trans = new Transaction(nIn, nOut, value, content);
+            this.updateTransactionHash(trans);
+            this.addTransaction(trans);
+            // 扩散交易
+            world.spreadTransactionToAll(this, trans);
+        };
+        //
+        this.addTransaction = function (trans) {
+            this.transactionPool.push(deepClone(trans));
+        };
+        // 生成新的区块
+        this.createBlock = function () {
+            for (var accountWitHName of this.accounts) {
+                var account = accountWitHName[1];
+                var accountName = accountWitHName[0];
+                break;
+            }
+            var trans = new Transaction(accountName, "CoinBase", 10, "挖矿奖励");
+            this.updateTransactionHash(trans);
+            account.increaseBalance(10);
+            this.transactionPool.unshift(trans);
+            var preblock = this.blocks.get(this.blockHeight - 1);
+            block = new Block(this.transactionPool, preblock.hash, preblock.height+1);
+            this.updateBlockHash(block);
+            return block;
+        };
+        // 更新交易的hash
+        this.updateTransactionHash = function (trans) {
+            trans.hash = SHA1(String(new Array([trans.nIn, trans.nOut, trans.value, trans.content, trans.time])));
+        };
+        // 计算block的nounce，更新hash
+        this.updateBlockHash = function (block) {
+            while (true) {
+                block.hash = SHA1(String(new Array([block.height, block.transactions, block.time, block.nounce, block.preHash])));
+                if (String(block.hash).substring(0, 2) == "00") {
+                    break;
+                }
+                block.nounce ++;
+            }
+        };
+        // ------------------- 有关节点的界面的操作 -----------------------
+        this.uiId = "#role_ul_li_" + this.id;
+
+    }
+    // 指定节点变色
+    function changeColor(color, uiId) {
+        $(uiId).parent().css({"background-color": color});
+    }
+    // 指定节点变指定颜色指定时间后变回，节点颜色原为 #00b1f1
+    function changeColorLastTime(color, uiId, lasttime) {
+        changeColor(color, uiId);
+        setTimeout(function () {
+            changeColor("#00b1f1", uiId);
+        }, lasttime);
+    }
+    // 指定节点延时获取交易信息，并变色1秒
+    function addTransactionWithDelay(id, delayTime, trans) {
+        var uiId = "#role_ul_li_" + id;
+        setTimeout(function () {
+            changeColorLastTime("#FF874B", uiId, 1000);
+            world.peers.get(id).addTransaction(trans);
+        }, delayTime);
+    }
+    // 指定节点延时获取新区块信息，并变色1秒
+    function addBlockWithDelay(id, delayTime, block) {
+        var uiId = "#role_ul_li_" + id;
+        setTimeout(function () {
+            changeColorLastTime("#ff69e8", uiId, 1000);
+            world.peers.get(id).addBlock(block);
+            if (selectedNodeIndex == id) {
+                chooseNode();
+            }
+        }, delayTime);
+    }
+
+    // 世界管理所有节点
+    function World() {
+        var transactionPool = new Array();
+        this.genesisBlock = new Block(transactionPool, "0", 0);
+        this.blockHeight = 1;
+        this.blocks = new Map();
+        this.blocks.set(0, deepClone(this.genesisBlock));
+        this.peers = new Map();
+        // 增加节点
+        this.addNewPeer = function (peerId) {
+            var peer = new Peer(this.blocks, peerId);
+            this.peers.set(peerId, peer);
+        };
+        // 创建初始节点
+        this.addNewPeer(1);
+        // 查找账户，找到返回账户对象，未找到返回false
+        this.findAccount = function (name) {
+            for (var peerWithId of this.peers) {
+                var peer = peerWithId[1];
+                for (var accountWithName of peer.accounts) {
+                    var account = accountWithName[1];
+                    if (account.name == name) {
+                        return account;
+                    }
+                }
+            }
+            return false;
+        };
+        this.addBlock = function (block) {
+            var myblock = deepClone(block);
+            this.blocks.set(this.blockHeight, myblock);
+            this.blockHeight ++;
+        };
+        // 模拟交易扩散的过程，传入上传交易的节点，交易
+        this.spreadTransactionToAll = function(peer, trans) {
+            updateConditionInfo(`
+            <p>
+            状态信息:</br>
+            正在扩散交易信息...</br>
+            </p>
+            `, 0);
+            changeColorLastTime("#FF874B", peer.uiId, 1000);
+            var keys = Array.from(this.peers.keys());
+            keys = shuffle(keys);
+            var delayTime = 2000;
+            for (var key of keys) {
+                if (key == peer.id) {
+                    continue
+                }
+                addTransactionWithDelay(key, delayTime, trans);
+                delayTime += 2000;
+            }
+            updateConditionInfo(`
+            <p>
+            状态信息:</br>
+            无</br>
+            </p>
+            `, delayTime);
+        };
+        // 随机决定打包区块的节点，并扩散
+        this.choosePeerToMakeBlock = function () {
+            updateConditionInfo(`
+            <p>
+            状态信息:</br>
+            区块生成完毕，正在扩散...</br>
+            </p>
+            `, 0);
+            spreadingBlock = true;
+            var keys = Array.from(this.peers.keys());
+            keys = shuffle(keys);
+            var peer = world.peers.get(keys[0]);
+            block = peer.createBlock();
+            this.addBlock(block);
+            var delayTime = 0;
+            for (var key of keys) {
+                peer = world.peers.get(key);
+                addBlockWithDelay(peer.id, delayTime, block);
+                delayTime += 2000;
+            }
+            updateConditionInfo(`
+            <p>
+            状态信息:</br>
+            无</br>
+            </p>
+            `, delayTime);
+            setTimeout(function () {
+                spreadingBlock = false;
+            }, delayTime)
+        };
+    }
+
+    // 更新状态信息
+    function updateConditionInfo(str, delayTime) {
+        setTimeout(function () {
+            document.querySelector('.condition_info').innerHTML = str;
+        }, delayTime)
+    }
+
+    $(".role_ul>li>input").each(function (index) {
+        $(this).click(function () {
+            selectedNodeIndex = index + 1;
+            if ($(this).is(':checked')) {
+                $(this).parent().siblings().css({"background-image": "none"});
+                $(this).parent().css({"background-image": "url(./img/kg.png)"});
+                $(this).parent().siblings().children().removeAttr("checked");
+                document.querySelector('.Trading_info').innerHTML="";
+                $(".bodyLeft_top>button,.bodyRight_top>button").css({"visibility":"visible"});
+                chooseNode();
+            } else {
+                $(this).parent().css({"background-image": "none"});
+                $(".bodyLeft_top>button,.bodyRight_top>button").css({"visibility":"hidden"});
+                // document.querySelector('.bodyLeft').innerHTML="";
+                // document.querySelector('.bodyRight_top').innerHTML="";
+                cancelNode();
+            }
+        });
+    });
+
+    function my_Modal(id) {
+        $(this).attr("data-target", "#Modal");
+        $("#Modal").modal('show');
+        selectedBlockId = parseInt(id.substring(6));
+        updateBlockInfo();
+    }
+    // 修改区块信息呈现
+    function updateBlockInfo() {
+        var selectedPeer = world.peers.get(selectedNodeIndex);
+        var selectedBlock = selectedPeer.blocks.get(selectedBlockId);
+        document.querySelector('#block_info').innerHTML = `
+        <p>
+        区块高度：${selectedBlock.height}</br>
+        生成时间：${timetrans(selectedBlock.time)}</br>
+        prehash：${selectedBlock.preHash}</br>
+        nounce：${selectedBlock.nounce}</br>
+        hash：${selectedBlock.hash}</br>
+        交易：
+        </p>
+        `;
+        if (selectedBlockId == 0) {
+            mystr = `
+            <p>
+            这是一个有意思的东西
+            </p>
+            `;
+            $("#block_info").append(mystr);
+        } else {
+            for (var trans of selectedBlock.transactions) {
+                mystr = `
+                <p>
+                付款人：${trans.nOut}</br>
+                收款人：${trans.nIn}</br>
+                金额：${trans.value}</br>
+                交易内容：${trans.content}</br>
+                时间：${trans.time}</br>
+                hash：${trans.hash}</br>
+                </p>
+                `;
+                $("#block_info").append(mystr);
+            }
+
+        }
+    }
+
+    // $(".mybtn").on("click",function () {
+    //     console.log($(this).attr("id"));
+    // })
+
+
+    function createBlockByButton() {
+        if (spreadingBlock) {
+            alert("区块正在扩散中，同时两个区块扩散的功能未做");
+            return;
+        }
+        world.choosePeerToMakeBlock();
+
+    }
+
+    // 提交交易
+    function submitTransaction() {
+        var nOut = $("#pay_account option:selected").text().substring(0, 40);
+        var nIn = $("#collection_credited").val();
+        var value = $("#transfer_amount").val();
+        var content = $("#transfer_content").val();
+        // 检查是否能够转账
+        if (checkTransaction(nIn, nOut, value)) {
+            var selectedPeer = world.peers.get(selectedNodeIndex);
+            selectedPeer.createTransaction(nIn, nOut, value, content);
+            var nOutAccount = world.findAccount(nOut);
+            nOutAccount.decreaseBalance(value);
+            var nInAccount = world.findAccount(nIn);
+            nInAccount.increaseBalance(value);
+            alert("提交成功");
+            chooseNode();
+        } else {
+            alert("错误");
+        }
+    }
+    //创建账号
+    function create_account() {
+
+        // 后台操作
+        var peer = world.peers.get(selectedNodeIndex);
+        peer.createAccount();
+        chooseNode();
+    }
+
+    //发起交易
+    function transaction_click() {
+        $("#myModal").modal('show');
+
+        // 修改付款人账户下拉菜单
+        document.querySelector('#pay_account').innerHTML = "";
+        var selectedPeer = world.peers.get(selectedNodeIndex);
+        for (var accountWithName of selectedPeer.accounts) {
+            var account = accountWithName[1];
+            mystr = `
+            <option selected="selected"><span class="random">${account.name}</span>余额:<span>${account.balance}</span></option>
+            `;
+            $("#pay_account").append(mystr);
+        }
+    }
+
+    //创建节点
+    function create_Node() {
+        var LiNum= $(".role_ul_li").length;
+        if(LiNum>=8){
+            alert("最多可创建八个节点");
+            return
+        }
+        currentNodeIndex++;
+        mystr = `
+         <li class="role_ul_li"><input id="role_ul_li_${currentNodeIndex}" class="my_checkbox_input" type="checkbox">${currentNodeIndex}</li>
+        `;
+        $(".role_ul").append(mystr);
+        addNodeClick(currentNodeIndex);
+
+        // 后台操作
+        world.addNewPeer(currentNodeIndex);
+    }
+
+    function addNodeClick(peerId) {
+        //切换li的背景图片，模仿checkbox切换效果
+        $("#role_ul_li_" + peerId).click(function () {
+            selectedNodeIndex = parseInt($(this).parent().text());
+            if ($(this).is(':checked')) {
+                $(this).parent().siblings().css({"background-image": "none"});
+                $(this).parent().css({"background-image": "url(./img/kg.png)"});
+                $(this).parent().siblings().children().removeAttr("checked");
+                document.querySelector('.Trading_info').innerHTML="";
+                $(".bodyLeft_top>button,.bodyRight_top>button").css({"visibility":"visible"});
+                chooseNode();
+            } else {
+                $(this).parent().css({"background-image": "none"});
+                $(".bodyLeft_top>button,.bodyRight_top>button").css({"visibility":"hidden"});
+                // document.querySelector('.bodyLeft').innerHTML="";
+                // document.querySelector('.bodyRight_top').innerHTML="";
+                cancelNode();
+            }
+
+        });
+
+    }
+
+    // function ListenLiNum() {
+    //    var LiNum= $(".role_ul_li").length;
+    //     if(LiNum==8){
+    //         $(".create_Node").removeAttr("onclick");
+    //         alert("最多可创建八个节点");
+    //     }
+    // }
+    // 点击交易池
+    function TxPoolModal() {
+        document.querySelector('#tx_pool').innerHTML=`
+        <p>交易池：</p>
+        `;
+        var selectedPeer = world.peers.get(selectedNodeIndex);
+        for (var trans of selectedPeer.transactionPool) {
+            mystr = `
+            <p>
+            付款人：${trans.nOut}</br>
+            收款人：${trans.nIn}</br>
+            金额：${trans.value}</br>
+            交易内容：${trans.content}</br>
+            时间：${timetrans(trans.time)}</br>
+            hash：${trans.hash}</br>
+            </p>
+            `;
+            $("#tx_pool").append(mystr);
+        }
+
+        $("#Tx_Modal").modal('show');
+    }
+    // 点击移除节点
+    function removePeer() {
+        if (!confirm("真的要删去它吗？")) {
+            return;
+        }
+        if (world.peers.size <= 1) {
+            alert("请至少保留一个节点！");
+            return;
+        }
+        world.peers.delete(selectedNodeIndex);
+        document.querySelector('.role_ul').innerHTML = "";
+        for (var peerWithId of world.peers) {
+            var peerId = peerWithId[0];
+            mystr = `
+            <li class="role_ul_li"><input id="role_ul_li_${peerId}" class="my_checkbox_input" type="checkbox">${peerId}</li>
+            `;
+            $(".role_ul").append(mystr);
+            addNodeClick(peerId);
+        }
+        $(".bodyLeft_top>button,.bodyRight_top>button").css({"visibility":"hidden"});
+    }
+
+    /**
+     随机化原数组
+     **/
+    function shuffle(array) {
+        var m = array.length,
+            t, i;
+        // 如果还剩有元素…
+        while (m) {
+            // 随机选取一个元素…
+            i = Math.floor(Math.random() * m--);
+            // 与当前元素进行交换
+            t = array[m];
+            array[m] = array[i];
+            array[i] = t;
+        }
+        return array;
+    }
+    //深度克隆
+    function deepClone(obj){
+        var result,oClass=isClass(obj);
+        //确定result的类型
+        if(oClass==="Object"){
+            result={};
+        }else if(oClass==="Array"){
+            result=[];
+        }else{
+            return obj;
+        }
+        for(key in obj){
+            var copy=obj[key];
+            if(isClass(copy)=="Object"){
+                result[key]=arguments.callee(copy);//递归调用
+            }else if(isClass(copy)=="Array"){
+                result[key]=arguments.callee(copy);
+            }else{
+                result[key]=obj[key];
+            }
+        }
+        return result;
+    }
+    //返回传递给他的任意对象的类
+    function isClass(o){
+        if(o===null) return "Null";
+        if(o===undefined) return "Undefined";
+        return Object.prototype.toString.call(o).slice(8,-1);
+    }
+    // 时间戳转成时间
+    function timetrans(date){
+        var date = new Date(date);
+        var Y = date.getFullYear() + '-';
+        var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+        var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+        var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+        var m = (date.getMinutes() <10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+        var s = (date.getSeconds() <10 ? '0' + date.getSeconds() : date.getSeconds());
+        return Y+M+D+h+m+s;
+    }
+
+
+</script>
+</html>
