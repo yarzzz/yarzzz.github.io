@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
+</head>
+<body>
+
+    <script>
+    var config = {
+        type: Phaser.AUTO,
+        width: 1000,
+        height: 1000,
+        scene: {
+            preload: preload,
+            create: create,
+            update: update
+        }
+    };
+
+    var game = new Phaser.Game(config);
+
+    function preload ()
+    {
+        this.load.setBaseURL('http://www.tzjlovekxj.com/game/jack');
+
+        this.load.image('road3', 'img/road3.png');
+        this.load.image('road4', 'img/road4.png');
+        this.load.image('f1', 'img/f1.png');
+        this.load.image('f2', 'img/f2.png');
+        this.load.image('f3', 'img/f3.png');
+        this.load.image('f4', 'img/f4.png');
+        this.load.image('f5', 'img/f5.png');
+        this.load.image('f6', 'img/f6.png');
+        this.load.image('f7', 'img/f7.png');
+        this.load.image('f8', 'img/f8.png');
+        this.load.image('f9', 'img/f9.png');
+    }
+
+    function create ()
+    {
+        this.add.image(200, 200, 'road3');
+        this.add.image(500, 200, 'road3');
+        this.add.image(800, 200, 'road3');
+        this.add.image(200, 500, 'road3');
+        this.add.image(500, 500, 'road3');
+        this.add.image(800, 500, 'road4');
+        this.add.image(200, 800, 'road3');
+        this.add.image(500, 800, 'road3');
+        this.add.image(800, 800, 'road3');
+
+        this.add.image(200, 200, 'f1');
+        this.add.image(500, 200, 'f2');
+        this.add.image(800, 200, 'f3');
+        this.add.image(200, 500, 'f4');
+        this.add.image(500, 500, 'f5');
+        this.add.image(800, 500, 'f6');
+        this.add.image(200, 800, 'f7');
+        this.add.image(500, 800, 'f8');
+        this.add.image(800, 800, 'f9');
+
+    }
+
+    function update ()
+    {
+
+    }
+    </script>
+
+</body>
+</html>
