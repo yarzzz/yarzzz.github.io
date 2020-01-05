@@ -8,8 +8,8 @@
     <script>
     var config = {
         type: Phaser.AUTO,
-        width: 900,
-        height: 900,
+        width: 1080,
+        height: 1920,
         scene: {
             preload: preload,
             create: create,
@@ -45,17 +45,26 @@
     {
         var cross = parseInt(Math.random() * 9);
         var pos = [150, 450, 750];
-        var faces = ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9'];
+        var faces = ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8'];
         for (var i = 0; i < 3; i++) {
             var x = i * 300 + 150;
             for (var j = 0; j < 3; j++) {
                 var y = j * 300 + 150;
-                var road = 'road3';
+                var road, face;
                 if (3 * i + j == cross) {
                     road = 'road4';
+                    face = 'f9';
+                }
+                else {
+                    road = 'road3';
+                    index = parseInt(Math.random() * faces.length);
+                    face = faces[index];
+                    faces.splice(index, 1);
                 }
                 var bg = this.add.image(0, 0, road);
-                var fc = this.add.image(0, 0, faces[3 * i + j]);
+                bg.setDisplaySize(200, 200).refreshBody();
+                var fc = this.add.image(0, 0, face);
+                fc.setDisplaySize(200, 200).refreshBody();
                 var container = this.add.container(x, y, [bg, fc]);
                 console.log(container.x, container.y);
                 if (i == 0 && j == 0) {
