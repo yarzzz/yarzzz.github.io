@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.21.0/dist/phaser.js"></script>
 </head>
 <body>
 
     <script>
     var config = {
         type: Phaser.AUTO,
-        width: 1000,
-        height: 1000,
+        width: 900,
+        height: 900,
         scene: {
             preload: preload,
             create: create,
@@ -18,6 +18,11 @@
     };
 
     var game = new Phaser.Game(config);
+
+    var selected = null;
+    var cards = [];
+    var moving = null;
+    var down = null;
 
     function preload ()
     {
@@ -38,31 +43,81 @@
 
     function create ()
     {
-        this.add.image(200, 200, 'road3');
-        this.add.image(500, 200, 'road3');
-        this.add.image(800, 200, 'road3');
-        this.add.image(200, 500, 'road3');
-        this.add.image(500, 500, 'road3');
-        this.add.image(800, 500, 'road4');
-        this.add.image(200, 800, 'road3');
-        this.add.image(500, 800, 'road3');
-        this.add.image(800, 800, 'road3');
+        var cross = parseInt(Math.random() * 9);
+        var pos = [150, 450, 750];
+        var faces = ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9'];
+        for (var i = 0; i < 3; i++) {
+            var x = i * 300 + 150;
+            for (var j = 0; j < 3; j++) {
+                var y = j * 300 + 150;
+                var road = 'road3';
+                if (3 * i + j == cross) {
+                    road = 'road4';
+                }
+                var bg = this.add.image(0, 0, road);
+                var fc = this.add.image(0, 0, faces[3 * i + j]);
+                var container = this.add.container(x, y, [bg, fc]);
+                console.log(container.x, container.y);
+                if (i == 0 && j == 0) {
+                    container.rotation = Math.PI / 2;
+                }
+                else if (i == 2 && j == 0) {
+                    container.rotation = Math.PI / 2 * 3;
+                }
+                else if (i == 1 && j == 2) {
+                    container.rotation = 0;
+                }
+                else {
+                    container.rotation = parseInt(Math.random() * 4) * Math.PI / 2;
+                }
+                container.setSize(bg.width, bg.height);
+                var hitArea = new Phaser.Geom.Rectangle(0,0,300,300);
+                container.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+                this.input.setDraggable(container);
+                container.on('dragstart', function () {
+                    console.log("dragstart");
+                    var i = (this.x - 150) / 300;
+                    var j = (this.y - 150) / 300;
+                    moving = [i, j];
+                    if (game.getTime() - down < 200) {
+                        this.list[1].setVisible(!this.list[1].visible);
+                    }
+                    else {
+                        down = game.getTime();
+                    }
+                });
+                container.on('drag', function (pointer) {
+                    console.log("drag");
+                    this.x = pointer.x;
+                    this.y = pointer.y;
+                });
+                container.on('dragend', function (pointer, dragX, dragY) {
+                    console.log("dragend");
+                    this.x = Math.round((this.x - 150) / 300) * 300 + 150;
+                    this.y = Math.round((this.y - 150) / 300) * 300 + 150;
+                    var i = (this.x - 150) / 300;
+                    var j = (this.y - 150) / 300;
+                    if (cards[3 * i + j] != this) {
+                        cards[3 * moving[0] + moving[1]] = cards[3 * i + j];
+                        cards[3 * i + j] = this;
+                        cards[3 * moving[0] + moving[1]].x = moving[0] * 300 + 150;
+                        cards[3 * moving[0] + moving[1]].y = moving[1] * 300 + 150;
+                    }
+                    else {
+                        if (game.getTime() - down > 500) {
+                            this.rotation += Math.PI / 2;
+                            down = null;
+                        }
+                    }
+                });
 
-        this.add.image(200, 200, 'f1');
-        this.add.image(500, 200, 'f2');
-        this.add.image(800, 200, 'f3');
-        this.add.image(200, 500, 'f4');
-        this.add.image(500, 500, 'f5');
-        this.add.image(800, 500, 'f6');
-        this.add.image(200, 800, 'f7');
-        this.add.image(500, 800, 'f8');
-        this.add.image(800, 800, 'f9');
-
+                cards.push(container);
+            }
+        }
     }
 
     function update ()
     {
-
     }
     </script>
 
