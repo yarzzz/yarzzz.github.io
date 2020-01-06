@@ -27,7 +27,7 @@
     function preload ()
     {
         this.load.setBaseURL('http://www.tzjlovekxj.com/game/jack');
-
+//http://www.tzjlovekxj.com/game/jack/img/road4.png
         this.load.image('road3', 'img/road3.png');
         this.load.image('road4', 'img/road4.png');
         this.load.image('f1', 'img/f1.png');
@@ -62,9 +62,9 @@
                     faces.splice(index, 1);
                 }
                 var bg = this.add.image(0, 0, road);
-                bg.setDisplaySize(200, 200).refreshBody();
+                // bg.setDisplaySize(200, 200).refreshBody();
                 var fc = this.add.image(0, 0, face);
-                fc.setDisplaySize(200, 200).refreshBody();
+                // fc.setDisplaySize(200, 200).refreshBody();
                 var container = this.add.container(x, y, [bg, fc]);
                 console.log(container.x, container.y);
                 if (i == 0 && j == 0) {
