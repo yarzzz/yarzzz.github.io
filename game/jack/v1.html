@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.21.0/dist/phaser.js"></script>
+</head>
+<body>
+
+    <script>
+    var config = {
+        type: Phaser.AUTO,
+        width: 1600,
+        height: 1100,
+        backgroundColor: '#dfdfdf',
+        scene: {
+            preload: preload,
+            create: create,
+            update: update
+        }
+    };
+
+    var game = new Phaser.Game(config);
+
+    var selected = null;
+    var cards = [];
+    var moving = null;
+    var down = null;
+
+    function preload ()
+    {
+        this.load.setBaseURL('http://www.tzjlovekxj.com/game/jack');
+//http://www.tzjlovekxj.com/game/jack/img/road4.png
+        this.load.image('road3', 'img/road3.png');
+        this.load.image('road4', 'img/road4.png');
+
+        this.load.image('f1', 'img/f1.png');
+        this.load.image('f2', 'img/f2.png');
+        this.load.image('f3', 'img/f3.png');
+        this.load.image('f4', 'img/f4.png');
+        this.load.image('f5', 'img/f5.png');
+        this.load.image('f6', 'img/f6.png');
+        this.load.image('f7', 'img/f7.png');
+        this.load.image('f8', 'img/f8.png');
+        this.load.image('f9', 'img/f9.png');
+
+        this.load.image('action1', 'img/action1.png');
+        this.load.image('action1b', 'img/action1b.png');
+        this.load.image('action2', 'img/action2.png');
+        this.load.image('action2b', 'img/action2b.png');
+        this.load.image('action3', 'img/action3.png');
+        this.load.image('action3b', 'img/action3b.png');
+        this.load.image('action4', 'img/action4.png');
+        this.load.image('action4b', 'img/action4b.png');
+
+        this.load.image('detector1', 'img/detector1.png');
+        this.load.image('detector2', 'img/detector2.png');
+        this.load.image('detector3', 'img/detector3.png');
+    }
+
+    function create ()
+    {
+        var cross = parseInt(Math.random() * 9);
+        var pos = [250, 550, 850];
+        var faces = ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8'];
+        for (var i = 0; i < 3; i++) {
+            cards.push([]);
+            var x = pos[i];
+            for (var j = 0; j < 3; j++) {
+                var y = pos[j];
+                var road, face;
+                if (3 * i + j == cross) {
+                    road = 'road4';
+                    face = 'f9';
+                }
+                else {
+                    road = 'road3';
+                    index = parseInt(Math.random() * faces.length);
+                    face = faces[index];
+                    faces.splice(index, 1);
+                }
+                var bg = this.add.image(0, 0, road);
+                // bg.setDisplaySize(200, 200).refreshBody();
+                var fc = this.add.image(0, 0, face);
+                // fc.setDisplaySize(200, 200).refreshBody();
+                var container = this.add.container(x, y, [bg, fc]);
+                console.log(container.x, container.y);
+                if (i == 0 && j == 0) {
+                    container.rotation = Math.PI / 2;
+                }
+                else if (i == 2 && j == 0) {
+                    container.rotation = Math.PI / 2 * 3;
+                }
+                else if (i == 1 && j == 2) {
+                    container.rotation = 0;
+                }
+                else {
+                    container.rotation = parseInt(Math.random() * 4) * Math.PI / 2;
+                }
+                container.setSize(bg.width, bg.height);
+                var hitArea = new Phaser.Geom.Rectangle(0,0,300,300);
+                container.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+                this.input.setDraggable(container);
+                container.on('dragstart', function () {
+                    console.log("dragstart");
+                    var i = (this.x - 250) / 300;
+                    var j = (this.y - 250) / 300;
+                    moving = [i, j];
+                    if (game.getTime() - down < 200) {
+                        this.list[1].setVisible(!this.list[1].visible);
+                    }
+                    else {
+                        down = game.getTime();
+                    }
+                });
+                container.on('drag', function (pointer) {
+                    console.log("drag");
+                    this.x = pointer.x;
+                    this.y = pointer.y;
+                });
+                container.on('dragend', function (pointer, dragX, dragY) {
+                    console.log("dragend");
+                    this.x = Math.round((this.x - 250) / 300) * 300 + 250;
+                    this.y = Math.round((this.y - 250) / 300) * 300 + 250;
+                    var i = (this.x - 250) / 300;
+                    var j = (this.y - 250) / 300;
+                    if (cards[i][j] != this) {
+                        cards[moving[0]][moving[1]] = cards[i][j];
+                        cards[i][j] = this;
+                        cards[moving[0]][moving[1]].x = moving[0] * 300 + 250;
+                        cards[moving[0]][moving[1]].y = moving[1] * 300 + 250;
+                    }
+                    else {
+                        if (game.getTime() - down > 500) {
+                            this.rotation += Math.PI / 2;
+                            down = null;
+                        }
+                    }
+                });
+
+                cards[i].push(container);
+            }
+        }
+
+        var detector;
+        detector = this.add.sprite(50, 250, 'detector1');
+        var hitArea = new Phaser.Geom.Rectangle(0,0,80,80);
+        detector.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        this.input.setDraggable(detector);
+        detector.on('drag', function (pointer) {
+            this.x = pointer.x;
+            this.y = pointer.y;
+        })
+        detector = this.add.sprite(1050, 250, 'detector2');
+        var hitArea = new Phaser.Geom.Rectangle(0,0,80,80);
+        detector.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        this.input.setDraggable(detector);
+        detector.on('drag', function (pointer) {
+            this.x = pointer.x;
+            this.y = pointer.y;
+        })
+        detector = this.add.sprite(550, 1050, 'detector3');
+        var hitArea = new Phaser.Geom.Rectangle(0,0,80,80);
+        detector.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        this.input.setDraggable(detector);
+        detector.on('drag', function (pointer) {
+            this.x = pointer.x;
+            this.y = pointer.y;
+        })
+
+        action = []
+
+        var a = this.add.image(1200, 200, 'action1');
+        a.setVisible(false);
+        var b = this.add.image(1200, 200, 'action1b');
+        action.push([a,b]);
+        var a = this.add.image(1200, 400, 'action2');
+        a.setVisible(false);
+        var b = this.add.image(1200, 400, 'action2b');
+        action.push([a,b]);
+        var a = this.add.image(1200, 600, 'action3');
+        a.setVisible(false);
+        var b = this.add.image(1200, 600, 'action3b');
+        action.push([a,b]);
+        var a = this.add.image(1200, 800, 'action4');
+        a.setVisible(false);
+        var b = this.add.image(1200, 800, 'action4b');
+        action.push([a,b]);
+
+        var text = this.add.text(1100, 900, "rand").setFontSize(50);
+        var hitArea = new Phaser.Geom.Rectangle(0,0,text.width,text.height);
+        text.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        text.on('pointerup', function () {
+            for (var i = 0; i < 4; i++) {
+                var n = parseInt(Math.random() * 2);
+                action[i][n].setVisible(true);
+                action[i][1 - n].setVisible(false);
+            }
+        });
+        var text = this.add.text(1400, 900, "turn").setFontSize(50);
+        var hitArea = new Phaser.Geom.Rectangle(0,0,text.width,text.height);
+        text.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        text.on('pointerup', function () {
+            for (var i = 0; i < 4; i++) {
+                for (var j = 0; j < 2; j++) {
+                    action[i][j].setVisible(!action[i][j].visible);
+                }
+            }
+        });
+
+        var suspects = [];
+
+        var text = this.add.text(500, 500, "1-3").setFontSize(100).setVisible(false).setColor('#000000').setBackgroundColor('#ffff00');
+        var hitArea = new Phaser.Geom.Rectangle(0,0,text.width,text.height);
+        text.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        this.input.setDraggable(text);
+        text.on('drag', function (pointer) {
+            this.x = pointer.x;
+            this.y = pointer.y;
+        })
+        suspects.push(text);
+        var text = this.add.text(500, 500, "2-0").setFontSize(100).setVisible(false).setColor('#000000').setBackgroundColor('#ffff00');
+        var hitArea = new Phaser.Geom.Rectangle(0,0,text.width,text.height);
+        text.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        this.input.setDraggable(text);
+        text.on('drag', function (pointer) {
+            this.x = pointer.x;
+            this.y = pointer.y;
+        })
+        suspects.push(text);
+        var text = this.add.text(500, 500, "3-0").setFontSize(100).setVisible(false).setColor('#000000').setBackgroundColor('#ffff00');
+        var hitArea = new Phaser.Geom.Rectangle(0,0,text.width,text.height);
+        text.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        this.input.setDraggable(text);
+        text.on('drag', function (pointer) {
+            this.x = pointer.x;
+            this.y = pointer.y;
+        })
+        suspects.push(text);
+        var text = this.add.text(500, 500, "4-1").setFontSize(100).setVisible(false).setColor('#000000').setBackgroundColor('#ffff00');
+        var hitArea = new Phaser.Geom.Rectangle(0,0,text.width,text.height);
+        text.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        this.input.setDraggable(text);
+        text.on('drag', function (pointer) {
+            this.x = pointer.x;
+            this.y = pointer.y;
+        })
+        suspects.push(text);
+        var text = this.add.text(500, 500, "5-1").setFontSize(100).setVisible(false).setColor('#000000').setBackgroundColor('#ffff00');
+        var hitArea = new Phaser.Geom.Rectangle(0,0,text.width,text.height);
+        text.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        this.input.setDraggable(text);
+        text.on('drag', function (pointer) {
+            this.x = pointer.x;
+            this.y = pointer.y;
+        })
+        suspects.push(text);
+        var text = this.add.text(500, 500, "6-1").setFontSize(100).setVisible(false).setColor('#000000').setBackgroundColor('#ffff00');
+        var hitArea = new Phaser.Geom.Rectangle(0,0,text.width,text.height);
+        text.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        this.input.setDraggable(text);
+        text.on('drag', function (pointer) {
+            this.x = pointer.x;
+            this.y = pointer.y;
+        })
+        suspects.push(text);
+        var text = this.add.text(500, 500, "7-1").setFontSize(100).setVisible(false).setColor('#000000').setBackgroundColor('#ffff00');
+        var hitArea = new Phaser.Geom.Rectangle(0,0,text.width,text.height);
+        text.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        this.input.setDraggable(text);
+        text.on('drag', function (pointer) {
+            this.x = pointer.x;
+            this.y = pointer.y;
+        })
+        suspects.push(text);
+        var text = this.add.text(500, 500, "8-1").setFontSize(100).setVisible(false).setColor('#000000').setBackgroundColor('#ffff00');
+        var hitArea = new Phaser.Geom.Rectangle(0,0,text.width,text.height);
+        text.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        this.input.setDraggable(text);
+        text.on('drag', function (pointer) {
+            this.x = pointer.x;
+            this.y = pointer.y;
+        })
+        suspects.push(text);
+        var text = this.add.text(500, 500, "9-1").setFontSize(100).setVisible(false).setColor('#000000').setBackgroundColor('#ffff00');
+        var hitArea = new Phaser.Geom.Rectangle(0,0,text.width,text.height);
+        text.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        this.input.setDraggable(text);
+        text.on('drag', function (pointer) {
+            this.x = pointer.x;
+            this.y = pointer.y;
+        })
+        suspects.push(text);
+
+
+        var text = this.add.text(1100, 1000, "suspect").setFontSize(50);
+        var hitArea = new Phaser.Geom.Rectangle(0,0,text.width,text.height);
+        text.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        text.on('pointerup', function () {
+            var n = parseInt(Math.random() * suspects.length);
+            console.log(suspects[n]);
+            suspects[n].setVisible(true);
+            suspects.splice(n, 1);
+        });
+
+        var rectObj = this.add.rectangle(1450, 400, 300, 900, '#000000');
+
+        var text = this.add.text(1400, 1000, "check").setFontSize(50);
+        var hitArea = new Phaser.Geom.Rectangle(0,0,text.width,text.height);
+        text.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        text.on('pointerup', function () {
+            rectObj.setVisible(!rectObj.visible);
+        });
+
+
+    }
+
+    function update ()
+    {
+    }
+    </script>
+
+</body>
+</html>

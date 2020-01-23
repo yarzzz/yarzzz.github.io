@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.22.0/dist/phaser.min.js"></script>
+</head>
+<body>
+
+    <script>
+        var winW = window.innerWidth;
+        var winH = window.innerHeight;
+        var lenUnit;
+        if (9 * winW > 16 * winH) {
+            lenUnit = winH / 900;
+        }
+        else {
+            lenUnit = winW / 1600;
+        }
+
+        var config = {
+            type: Phaser.AUTO,
+            width: 1600 * lenUnit,
+            height: 900 * lenUnit,
+            backgroundColor: '#dfdfdf',
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            }
+        };
+
+        var game = new Phaser.Game(config);
+
+        function preload ()
+        {
+            this.load.setBaseURL('http://www.tzjlovekxj.com/game/jack');
+
+            this.load.image('road3', 'img/road3.png');
+            this.load.image('road4', 'img/road4.png');
+
+            this.load.image('f1', 'img/f1.png');
+            this.load.image('f2', 'img/f2.png');
+            this.load.image('f3', 'img/f3.png');
+            this.load.image('f4', 'img/f4.png');
+            this.load.image('f5', 'img/f5.png');
+            this.load.image('f6', 'img/f6.png');
+            this.load.image('f7', 'img/f7.png');
+            this.load.image('f8', 'img/f8.png');
+            this.load.image('f9', 'img/f9.png');
+
+            this.load.image('s1', 'img/s1.png');
+            this.load.image('s2', 'img/s2.png');
+            this.load.image('s3', 'img/s3.png');
+            this.load.image('s4', 'img/s4.png');
+            this.load.image('s5', 'img/s5.png');
+            this.load.image('s6', 'img/s6.png');
+            this.load.image('s7', 'img/s7.png');
+            this.load.image('s8', 'img/s8.png');
+            this.load.image('s9', 'img/s9.png');
+            this.load.image('sb', 'img/sb.png');
+
+            this.load.image('action1', 'img/action1.png');
+            this.load.image('action1b', 'img/action1b.png');
+            this.load.image('action2', 'img/action2.png');
+            this.load.image('action2b', 'img/action2b.png');
+            this.load.image('action3', 'img/action3.png');
+            this.load.image('action3b', 'img/action3b.png');
+            this.load.image('action4', 'img/action4.png');
+            this.load.image('action4b', 'img/action4b.png');
+
+            this.load.image('detector1', 'img/detector1.png');
+            this.load.image('detector2', 'img/detector2.png');
+            this.load.image('detector3', 'img/detector3.png');
+        }
+
+        function create ()
+        {
+            // 设置杰克区域
+            var jack_area = this.add.rectangle(0, 0, 450 * lenUnit, 250 * lenUnit, 0x404040);
+            var jack_num_n = 0;
+            var jack_num = this.add.text(150 * lenUnit, -100 * lenUnit, jack_num_n + '').setFontSize(parseInt(100 * lenUnit));
+            var jack_container = this.add.container(1350 * lenUnit, 200 * lenUnit, [jack_area, jack_num]);
+            jack_container.name = 'jack';
+            jack_container.setSize(450 * lenUnit, 250 * lenUnit);
+            var hitArea = new Phaser.Geom.Rectangle(0, 0, 450 * lenUnit, 250 * lenUnit);
+            jack_container.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains, true);
+            var jack_down = null;
+            var jack_cards = [];
+            var jack_card_pos = [-160 * lenUnit, 0];
+            jack_container.on('pointerdown', function () {
+            	// console.log('pointerdown');
+	        	jack_down = game.getTime();
+	        });
+	        jack_container.on('pointerout', function () {
+	        	jack_down = null;
+	        });
+	        jack_container.on('pointerup', function () {
+            	// console.log('pointerup');
+	            if (game.getTime() - jack_down > 500) {
+	                // 长按
+                    if (jack_down == null ) {
+		            	return
+		            }
+		            for (var i = 0; i < jack_cards.length; i++) {
+		            	// console.log(jack_cards[i]);
+		            	jack_cards[i].setVisible(!jack_cards[i].visible);
+		            }
+	                jack_down = null;
+	            }
+	        });
+
+            // 设置侦探区域
+            var detector_area = this.add.rectangle(0, 0, 450 * lenUnit, 250 * lenUnit, 0xc0c0c0);
+            var detector_zone = this.add.zone(0, 0, 450 * lenUnit, 250 * lenUnit).setRectangleDropZone(450 * lenUnit, 250 * lenUnit);
+            detector_zone.name = 'detector';
+            var detector_num_n = 0;
+            var detector_num = this.add.text(150 * lenUnit, -100 * lenUnit, detector_num_n + '').setFontSize(parseInt(100 * lenUnit));
+            var detector_container = this.add.container(1350 * lenUnit, 470 * lenUnit, [detector_area, detector_num, detector_zone]);
+            detector_container.name = 'detector';
+            detector_container.setSize(450 * lenUnit, 250 * lenUnit);
+            var hitArea = new Phaser.Geom.Rectangle(0, 0, 450 * lenUnit, 250 * lenUnit);
+            detector_container.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains, true);
+            var detector_card_pos = [-160 * lenUnit, 0];
+
+            // 画行动牌区域，和四个行动牌
+            var actions_random = false;
+            var action_area_down;
+            var actions = [];
+            var action_bg = this.add.rectangle(0, 0, 700 * lenUnit, 250 * lenUnit, 0x8080ff);
+            var container = this.add.container(1240 * lenUnit, 750 * lenUnit, [action_bg]);
+            container.setSize(700 * lenUnit, 250 * lenUnit);
+            var hitArea = new Phaser.Geom.Rectangle(0, 0, 700 * lenUnit, 250 * lenUnit);
+            container.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+            container.on('pointerdown', function () {
+	            if (game.getTime() - action_area_down < 300) {
+                    // 双击
+	                actions_random = true;
+		            for (var i = 0; i < 4; i++) {
+		                var n = parseInt(Math.random() * 2);
+		                actions[i][n].setVisible(true);
+		                actions[i][1 - n].setVisible(false);
+		            }
+		            action_area_down = null;
+                }
+                else {
+                    action_area_down = game.getTime();
+                }
+	        });
+	        container.on('pointerout', function () {
+	        	action_area_down = null;
+	        });
+            container.on('pointerup', function () {
+	            if (game.getTime() - action_area_down > 500) {
+	                // 长按
+                    if (!actions_random) {
+                    	return;
+                    }
+                    if (action_area_down == null ) {
+		            	return
+		            }
+		            for (var i = 0; i < 4; i++) {
+		                for (var j = 0; j < 2; j++) {
+		                    actions[i][j].setVisible(!actions[i][j].visible);
+		                }
+		            }
+	                action_area_down = null;
+	            }
+	        });
+
+            // 画四个行动牌
+            var action_names = [['action1', 'action1b'], ['action2', 'action2b'], 
+            ['action3', 'action3b'], ['action4', 'action4b']]
+            for (var i = 0; i < 4; i++) {
+            	actions.push([]);
+            	var x = (166 * i - 250) * lenUnit;
+            	var y = 0;
+            	for (var j = 0; j < 2; j++) {
+	            	var action = this.add.image(x, y, action_names[i][j]).setVisible(false);
+	            	action.setDisplaySize(150 * lenUnit, 150 * lenUnit);
+	            	// af.setVisible(false);
+	            	container.add(action);
+	            	actions[i].push(action);
+            	}
+            }
+
+            // 画出疑犯牌背
+            var suspect_pos = [1000 * lenUnit, 200 * lenUnit];
+            var suspect_bg = this.add.image(suspect_pos[0], suspect_pos[1], 'sb').setDisplaySize(150 * lenUnit, 240 * lenUnit);
+            
+            // 画上回合
+            var turn_pos = [1000 * lenUnit, 470 * lenUnit];
+            // 背景
+            var turn_bg = this.add.ellipse(0, 0, 150 * lenUnit, 200 * lenUnit, 0xff80ff);
+            // 数字
+            var turn_num_n = 1;
+            var turn_num = this.add.text(0, 0, turn_num_n + '').setFontSize(parseInt(100 * lenUnit));
+            turn_num.x -= turn_num.width / 2;
+            turn_num.y -= turn_num.height / 2;
+            var container = this.add.container(turn_pos[0], turn_pos[1], [turn_bg, turn_num]);
+            container.setSize(150 * lenUnit, 250 * lenUnit);
+            var hitArea = new Phaser.Geom.Rectangle(0, 0, 150 * lenUnit, 250 * lenUnit);
+            container.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+            this.input.setDraggable(container);
+            container.on('drag', function (pointer) {
+            	// console.log('drag');
+                this.x = pointer.x;
+                this.y = pointer.y;
+            });
+            container.on('dragend', function (pointer) {
+            	// console.log('dragend');
+                this.x = turn_pos[0];
+                this.y = turn_pos[1];
+            });
+            container.on('drop', function (pointer, target) {
+            	// console.log(target);
+            	// console.log(target.name);
+                if (target.name == 'jack') {
+	                turn_num_n += 1;
+	                turn_num.text = turn_num_n + '';
+	                jack_num_n += 1;
+            		jack_num.text = jack_num_n + '';
+	            }
+                if (target.name == 'detector') {
+	                turn_num_n += 1;
+	                turn_num.text = turn_num_n + '';
+	                detector_num_n += 1;
+            		detector_num.text = detector_num_n + '';
+	            }
+            });
+
+            // 添加所有嫌犯牌
+            suspect_cards = [];
+            suspect_index = 0;
+            var container = this.add.container(suspect_pos[0], suspect_pos[1], []);
+            container.setSize(150 * lenUnit, 250 * lenUnit);
+            var hitArea = new Phaser.Geom.Rectangle(0, 0, 150 * lenUnit, 250 * lenUnit);
+            container.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+            this.input.setDraggable(container);
+            container.on('dragstart', function (pointer) {
+            	// console.log('drag');
+        		if (suspect_cards.length == 0) {
+        			return;
+        		}
+        		suspect_index = parseInt(Math.random() * suspect_cards.length);
+        		suspect_cards[suspect_index].setVisible(true);
+        		if (suspect_cards.length == 1) {
+        			suspect_bg.setVisible(false);
+        		}
+            });
+            container.on('drag', function (pointer) {
+            	// console.log('drag');
+        		if (suspect_cards.length == 0) {
+        			return;
+        		}
+                this.x = pointer.x;
+                this.y = pointer.y;
+            });
+            container.on('dragend', function (pointer) {
+            	// console.log('dragend');
+        		if (suspect_cards.length == 0) {
+        			return;
+        		}
+                this.x = suspect_pos[0];
+                this.y = suspect_pos[1];
+                for (var i = 0; i < suspect_cards.length; i++) {
+                	suspect_cards[i].setVisible(false);
+                }
+                if (suspect_cards.length > 0) {
+        			suspect_bg.setVisible(true);
+        		}
+            });
+            var THIS = this;
+            container.on('drop', function (pointer, target) {
+            	// console.log(target);
+            	// console.log(target.name);
+                if (target.name == 'jack') {
+	                // console.log(suspect_cards[suspect_index]);
+	                var card = suspect_cards[suspect_index];
+	                suspect_cards.splice(suspect_index, 1);
+	                this.remove(card, true);
+	                var get_card_bg = THIS.add.image(jack_card_pos[0], jack_card_pos[1], 'sb').setDisplaySize(75 * lenUnit, 120 * lenUnit);
+	                var get_card = THIS.add.image(jack_card_pos[0], jack_card_pos[1], card.name).setDisplaySize(75 * lenUnit, 120 * lenUnit);
+	                jack_card_pos[0] += 80 * lenUnit;
+	                jack_container.add(get_card_bg);
+	                jack_container.add(get_card);
+	                jack_cards.push(get_card);
+	                for (var i = 0; i < jack_cards.length; i++) {
+	                	jack_cards[i].setVisible(false);
+	                }
+	            }
+                if (target.name == 'detector') {
+	                // console.log(suspect_cards[suspect_index]);
+	                var card = suspect_cards[suspect_index];
+	                suspect_cards.splice(suspect_index, 1);
+	                this.remove(card, true);
+	                var get_card = THIS.add.image(detector_card_pos[0], detector_card_pos[1], card.name).setDisplaySize(75 * lenUnit, 120 * lenUnit);
+	                detector_card_pos[0] += 80 * lenUnit;
+	                detector_container.add(get_card);
+	            }
+            });
+            suspect_names = ['s1', 's2', 's3', 's4', 's5', 's6', 's7', 's8', 's9']
+            for (var i = 0; i < 9; i++) {
+            	var card = this.add.image(0, 0, suspect_names[i]).setDisplaySize(150 * lenUnit, 240 * lenUnit).setVisible(false);
+            	card.name = suspect_names[i];
+            	suspect_cards.push(card);
+            	container.add(card);
+            }
+            
+            // 画上9张牌
+            var face_names = ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9'];
+            var game_roads = [];
+            for (var i = 0; i < 3; i++) {
+                game_roads.push([]);
+                for (var j = 0; j < 3; j++) {
+                    // 贴图
+                    var face_index = parseInt(Math.random() * face_names.length);
+                    var face_name = face_names[face_index];
+                    face_names.splice(face_index, 1);
+                    var road_name;
+                    if (face_name == 'f9') {
+                        road_name = 'road4';
+                    }
+                    else {
+                        road_name = 'road3';
+                    }
+                    var road_obj = this.add.image(0, 0, road_name).setDisplaySize(200 * lenUnit, 200 * lenUnit);
+                    var face_obj = this.add.image(0, 0, face_name).setDisplaySize(200 * lenUnit, 200 * lenUnit);
+                    var x = (250 + 200 * i) * lenUnit;
+                    var y = (250 + 200 * j) * lenUnit;
+                    var container = this.add.container(x, y, [road_obj, face_obj]);
+                    container.setSize(200 * lenUnit, 200 * lenUnit);
+
+                    // 随机旋转
+                    if (i == 0 && j == 0) {
+                        container.rotation = Math.PI / 2;
+                    }
+                    else if (i == 2 && j == 0) {
+                        container.rotation = Math.PI / 2 * 3;
+                    }
+                    else if (i == 1 && j == 2) {
+                        container.rotation = 0;
+                    }
+                    else {
+                        container.rotation = parseInt(Math.random() * 4) * Math.PI / 2;
+                    }
+
+                    // 保存
+                    game_roads[i].push(container);
+
+                    // 添加动作
+                    var moving;
+                    var down;
+                    var hitArea = new Phaser.Geom.Rectangle(0, 0, 200 * lenUnit, 200 * lenUnit);
+                    container.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+                    this.input.setDraggable(container);
+                    container.on('dragstart', function (pointer, gameObject) {
+                        // console.log("dragstart");
+                        var i = (this.x / lenUnit - 250) / 200;
+                        var j = (this.y / lenUnit - 250) / 200;
+                        moving = [i, j];
+                        if (game.getTime() - down < 200) {
+                            // 双击
+                            this.rotation += Math.PI / 2;
+                        }
+                        else {
+                            down = game.getTime();
+                        }
+                    });
+                    container.on('drag', function (pointer) {
+                        // console.log("drag");
+                        this.x = pointer.x;
+                        this.y = pointer.y;
+                    });
+                    container.on('dragend', function (pointer, dragX, dragY) {
+                        // console.log("dragend");
+                        if (this.x < 150 * lenUnit || this.x > 750 * lenUnit || 
+                        	this.y < 150 * lenUnit || this.y > 750 * lenUnit) {
+                        	this.x = (moving[0] * 200 + 250) * lenUnit;
+                        	this.y = (moving[1] * 200 + 250) * lenUnit;
+                        	return;
+                        }
+                        this.x = (Math.round((this.x / lenUnit - 250) / 200) * 200 + 250) * lenUnit;
+                        this.y = (Math.round((this.y / lenUnit - 250) / 200) * 200 + 250) * lenUnit;
+                        var i = (this.x / lenUnit - 250) / 200;
+                        var j = (this.y / lenUnit - 250) / 200;
+                        if (game_roads[i][j] != this) {
+                            // 拖动
+                            game_roads[moving[0]][moving[1]] = game_roads[i][j];
+                            game_roads[i][j] = this;
+                            game_roads[moving[0]][moving[1]].x = (moving[0] * 200 + 250) * lenUnit;
+                            game_roads[moving[0]][moving[1]].y = (moving[1] * 200 + 250) * lenUnit;
+                        }
+                        else {
+                            if (game.getTime() - down > 500) {
+                                // 长按
+                                this.list[1].setVisible(!this.list[1].visible);
+                                down = null;
+                            }
+                        }
+                    });
+                }
+            }
+
+            // 画三个侦探
+            var detector_names = ['detector1', 'detector2', 'detector3'];
+            var detector_positions = [[75 * lenUnit, 250 * lenUnit], 
+            [825 * lenUnit, 250 * lenUnit], 
+            [450 * lenUnit, 825 * lenUnit]];
+            for (var i = 0; i < 3; i++) {
+            	detector = this.add.image(detector_positions[i][0], detector_positions[i][1], detector_names[i]);
+            	detector.setDisplaySize(100 * lenUnit, 100 * lenUnit);
+            	var hitArea = new Phaser.Geom.Rectangle(0, 0, 100 * lenUnit, 100 * lenUnit);
+                detector.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+                this.input.setDraggable(detector);
+                detector.on('drag', function (pointer) {
+                    // console.log("drag");
+                    this.x = pointer.x;
+                    this.y = pointer.y;
+                });
+                detector.on('dragend', function (pointer) {
+                    // console.log("drag");
+                    if (pointer.x > 850 * lenUnit) {
+                    	this.x = 825 * lenUnit;
+                    }
+                });
+            }
+
+        }
+
+        function update ()
+        {
+        }
+
+        function prt(argument) {
+            console.log(argument);
+        }
+
+        function cri(argument) {
+            // body...
+        }
+    </script>
+
+</body>
+</html>
