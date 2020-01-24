@@ -65,11 +65,11 @@
             this.load.image('action3', 'img/action3.png');
             this.load.image('action3b', 'img/action3b.png');
             this.load.image('action4', 'img/action4.png');
-            this.load.image('action4b', 'img/action4b.png');
+            this.load.image('action4b', 'img/action3b.png');
 
-            this.load.image('detector1', 'img/detector1.png');
-            this.load.image('detector2', 'img/detector2.png');
-            this.load.image('detector3', 'img/detector3.png');
+            this.load.image('detector1', 'img/action1b.png');
+            this.load.image('detector2', 'img/action2.png');
+            this.load.image('detector3', 'img/action1.png');
         }
 
         function create ()
@@ -123,16 +123,19 @@
 
             // 画行动牌区域，和四个行动牌
             var actions_random = false;
-            var action_area_down;
+            var action_area_down = null;
             var actions = [];
             var action_bg = this.add.rectangle(0, 0, 700 * lenUnit, 250 * lenUnit, 0x8080ff);
             var container = this.add.container(1240 * lenUnit, 750 * lenUnit, [action_bg]);
             container.setSize(700 * lenUnit, 250 * lenUnit);
             var hitArea = new Phaser.Geom.Rectangle(0, 0, 700 * lenUnit, 250 * lenUnit);
-            container.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+            container.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains, true);
+            this.input.setDraggable(container);
             container.on('pointerdown', function () {
+            	// console.log('行动', 'pointerdown', action_area_down);
 	            if (game.getTime() - action_area_down < 300) {
                     // 双击
+                    // console.log('行动', '双击');
 	                actions_random = true;
 		            for (var i = 0; i < 4; i++) {
 		                var n = parseInt(Math.random() * 2);
@@ -142,15 +145,19 @@
 		            action_area_down = null;
                 }
                 else {
+                	// console.log('行动', game.getTime());
                     action_area_down = game.getTime();
                 }
 	        });
-	        container.on('pointerout', function () {
+	        container.on('dragleave', function () {
+	        	// console.log('行动', 'dragleave');
 	        	action_area_down = null;
 	        });
             container.on('pointerup', function () {
+            	// console.log('行动', 'pointerup', action_area_down);
 	            if (game.getTime() - action_area_down > 500) {
 	                // 长按
+	                // console.log('行动', '长按');
                     if (!actions_random) {
                     	return;
                     }
