@@ -5,16 +5,30 @@
 </head>
 <body>
     <script>
-	var config = {
-        type: Phaser.AUTO,
-        width: window.innerWidth,
-        height: window.innerHeight,
-        scene: {
-            preload: preload,
-            create: create,
-            update: update
+    var winW = window.innerWidth;
+        var winH = window.innerHeight;
+        var lenUnit;
+        if (9 * winW > 16 * winH) {
+            lenUnit = winH / 900;
         }
-    };
+        else {
+            lenUnit = winW / 1600;
+        }
+
+        var config = {
+            type: Phaser.AUTO,
+            width: 1600 * lenUnit,
+            height: 900 * lenUnit,
+            backgroundColor: '#dfdfdf',
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            }
+        };
+
+    var game = new Phaser.Game(config);
+    
     function preload () {}
     function create () {}
     function update () {}
