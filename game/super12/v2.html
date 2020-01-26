@@ -19,7 +19,7 @@
             type: Phaser.AUTO,
             width: 1600 * lenUnit,
             height: 1800 * lenUnit,
-            backgroundColor: '#dfdfdf',
+            backgroundColor: '#dddddd',
             scene: {
                 preload: preload,
                 create: create,
@@ -29,24 +29,10 @@
 
     var game = new Phaser.Game(config);
 
-    function preload () {
-        // this.load.setBaseURL('http://www.tzjlovekxj.com/game/super12/img');
-
-        // this.load.image('p1', '1.png');
-        // this.load.image('p2', '2.png');
-        // this.load.image('p3', '3.png');
-        // this.load.image('p4', '4.png');
-        // this.load.image('p5', '5.png');
-        // this.load.image('p6', '6.png');
-        // this.load.image('p7', '7.png');
-        // this.load.image('p8', '8.png');
-        // this.load.image('p9', '9.png');
-        // this.load.image('p10', '10.png');
-        // this.load.image('p11', '11.png');
-        // this.load.image('p12', '12.png');
-    }
+    function preload () {}
 
     function create () {
+        // console.log(this.textures);
     	var rotate_zone = this.add.rectangle(200 * lenUnit, 200 * lenUnit, 300 * lenUnit, 300 * lenUnit, 0x777777);
     	var hitArea = new Phaser.Geom.Rectangle(0, 0, rotate_zone.width, rotate_zone.height);
 		rotate_zone.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains, true);
@@ -80,9 +66,7 @@
     	for (var i = 0; i < pic_shape.length; i++) {
     		pic_pos.push(null);
     		var pic_name = 'p' + i;
-            var pic_obj = this.add.polygon(800 * lenUnit, 1300 * lenUnit, pic_shape[i], pic_color[i], 0.8);
-    		// var pic_obj = this.add.image(800 * lenUnit, 500 * lenUnit, pic_name);
-            // pic_obj.setScale(0.8 * lenUnit);
+            var pic_obj = this.add.polygon(800 * lenUnit, 1300 * lenUnit, pic_shape[i], pic_color[i], 0.8).setStrokeStyle(4 * lenUnit, 0x000000);
     		var hitArea = new Phaser.Geom.Polygon(pic_shape[i]);
     		pic_obj.setInteractive(hitArea, Phaser.Geom.Polygon.Contains);
     		this.input.setDraggable(pic_obj);
@@ -94,12 +78,14 @@
     			this.y = pic_pos[i][1] + pointer.y;
     		});
     		pic_obj.on('drop', function (pointer, target) {
-    			console.log('drop', target, target.name);
     			if (target.name == 'rotate_zone') {
     				this.rotation += Math.PI / 2;
+                    if (this.rotation >= 2 * Math.PI) {
+                        this.rotation -= 2 * Math.PI;
+                    }
     			}
     			else if (target.name == 'flip_zone') {
-    				this.flipX = !this.flipX;
+                    this.displayWidth = -this.displayWidth;
     			}
     		});
     	}
