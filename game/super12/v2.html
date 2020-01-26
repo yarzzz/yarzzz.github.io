@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.21.0/dist/phaser.min.js"></script>
+</head>
+<body>
+    <script>
+	var winW = window.innerWidth;
+        var winH = window.innerHeight;
+        var lenUnit;
+        if (9 * winW > 16 * winH) {
+            lenUnit = winH / 900;
+        }
+        else {
+            lenUnit = winW / 1600;
+        }
+
+        var config = {
+            type: Phaser.AUTO,
+            width: 1600 * lenUnit,
+            height: 1800 * lenUnit,
+            backgroundColor: '#dfdfdf',
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            }
+        };
+
+    var game = new Phaser.Game(config);
+
+    function preload () {
+        // this.load.setBaseURL('http://www.tzjlovekxj.com/game/super12/img');
+
+        // this.load.image('p1', '1.png');
+        // this.load.image('p2', '2.png');
+        // this.load.image('p3', '3.png');
+        // this.load.image('p4', '4.png');
+        // this.load.image('p5', '5.png');
+        // this.load.image('p6', '6.png');
+        // this.load.image('p7', '7.png');
+        // this.load.image('p8', '8.png');
+        // this.load.image('p9', '9.png');
+        // this.load.image('p10', '10.png');
+        // this.load.image('p11', '11.png');
+        // this.load.image('p12', '12.png');
+    }
+
+    function create () {
+    	var rotate_zone = this.add.rectangle(200 * lenUnit, 200 * lenUnit, 300 * lenUnit, 300 * lenUnit, 0x777777);
+    	var hitArea = new Phaser.Geom.Rectangle(0, 0, rotate_zone.width, rotate_zone.height);
+		rotate_zone.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains, true);
+    	rotate_zone.name = 'rotate_zone';
+    	var flip_zone = this.add.rectangle(200 * lenUnit, 700 * lenUnit, 300 * lenUnit, 300 * lenUnit, 0x555555);
+    	var hitArea = new Phaser.Geom.Rectangle(0, 0, flip_zone.width, flip_zone.height);
+		flip_zone.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains, true);
+    	flip_zone.name = 'flip_zone';
+        // 添加放拼板的位置
+    	this.add.rectangle(1000 * lenUnit, 450 * lenUnit, 1200 * lenUnit, 720 * lenUnit, 0x666666);
+    	var pic_pos = [];
+        var pic_shape = [[0, 0, 600, 0, 600, 120, 0, 120], 
+        [0, 0, 480, 0, 480, 120, 120, 120, 120, 240, 0, 240], 
+        [0, 0, 480, 0, 480, 120, 240, 120, 240, 240, 120, 240, 120, 120, 0, 120], 
+        [120, 0, 240, 0, 240, 240, 120, 240, 120, 480, 0, 480, 0, 120, 120, 120], 
+        [120, 0, 360, 0, 360, 120, 240, 120, 240, 240, 120, 240, 120, 360, 0, 360, 0, 120, 120, 120], 
+        [0, 0, 360, 0, 360, 120, 120, 120, 120, 360, 0, 360], 
+        [0, 0, 240, 0, 240, 240, 120 ,240, 120 ,360, 0 ,360], 
+        [0, 0, 240, 0, 240, 120, 120, 120, 120, 240, 240, 240, 240, 360, 0, 360], 
+        [120, 0, 360, 0, 360, 120, 240, 120, 240, 360, 0, 360, 0, 240, 120, 240], 
+        [120, 0, 360, 0, 360, 120, 240, 120, 240, 360, 120, 360, 120, 240, 0, 240, 0, 120, 120, 120], 
+        [0, 0, 360, 0, 360, 120, 240, 120, 240, 360, 120, 360, 120, 120, 0, 120], 
+        [120, 0, 240, 0, 240, 120, 360, 120, 360, 240, 240, 240, 240, 360, 120, 360, 120, 240, 0, 240, 0, 120, 120, 120]];
+        for (var i = 0; i < pic_shape.length; i++) {
+            for (var j = 0; j < pic_shape[i].length; j++) {
+                 pic_shape[i][j] *= lenUnit;
+             }
+        }
+        var pic_color = [0x000099, 0x990000, 0xff0000, 0xff9933, 0xffff00, 0x99ff00, 
+        0x00cc00, 0x0099ff, 0x242424, 0x660099, 0xff00ff, 0xffffcc];
+    	for (var i = 0; i < pic_shape.length; i++) {
+    		pic_pos.push(null);
+    		var pic_name = 'p' + i;
+            var pic_obj = this.add.polygon(800 * lenUnit, 1300 * lenUnit, pic_shape[i], pic_color[i], 0.8);
+    		// var pic_obj = this.add.image(800 * lenUnit, 500 * lenUnit, pic_name);
+            // pic_obj.setScale(0.8 * lenUnit);
+    		var hitArea = new Phaser.Geom.Polygon(pic_shape[i]);
+    		pic_obj.setInteractive(hitArea, Phaser.Geom.Polygon.Contains);
+    		this.input.setDraggable(pic_obj);
+    		pic_obj.on('dragstart', function (pointer) {
+    			pic_pos[i] = [this.x - pointer.x, this.y - pointer.y];
+    		});
+    		pic_obj.on('drag', function (pointer) {
+    			this.x = pic_pos[i][0] + pointer.x;
+    			this.y = pic_pos[i][1] + pointer.y;
+    		});
+    		pic_obj.on('drop', function (pointer, target) {
+    			console.log('drop', target, target.name);
+    			if (target.name == 'rotate_zone') {
+    				this.rotation += Math.PI / 2;
+    			}
+    			else if (target.name == 'flip_zone') {
+    				this.flipX = !this.flipX;
+    			}
+    		});
+    	}
+        this.input.on('dragstart', function (pointer, gameObject) {
+            this.children.bringToTop(gameObject);
+        }, this);
+    }
+
+    function update () {}
+    </script>
+</body>
+</html>
