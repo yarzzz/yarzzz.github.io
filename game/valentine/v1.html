@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.21.0/dist/phaser.min.js"></script>
+</head>
+<body>
+    <script>
+    var winW = window.innerWidth - 20;
+    var winH = window.innerHeight - 20;
+    var lenUnit;
+    if (winW > winH) {
+        lenUnit = winH / 1000;
+    }
+    else {
+        lenUnit = winW / 1000;
+    }
+
+    FONT_SIZE = 50 * lenUnit;
+
+    var config = {
+        type: Phaser.AUTO,
+        width: winW,
+        height: winH,
+        backgroundColor: '#dfdfdf',
+        scene: {
+            preload: preload,
+            create: create,
+            update: update,
+        },
+        physics: {
+            default: 'matter'
+        }
+    };
+
+    var game = new Phaser.Game(config);
+    
+    function preload () {
+        this.load.setBaseURL('http://www.tzjlovekxj.com//game/valentine/img');
+
+        this.load.image('win', 'win.jpg');
+    }
+
+    function create () {
+        var THIS = this;
+        THIS.matter.world.setBounds().disableGravity().update30Hz();
+        // console.log(this);
+        // console.log(game);
+        console.log(lenUnit);
+        var instruction = THIS.add.text(winW / 2, winH / 2, "找到不动的字，点击它过关");
+        instruction.setFontSize(FONT_SIZE);
+        instruction.x -= instruction.width / 2;
+        instruction.y -= instruction.height * 1.5;
+
+        startGuide = THIS.add.text(winW / 2, winH / 2, "点击任意位置开始游戏");
+        startGuide.setFontSize(FONT_SIZE);
+        startGuide.x -= startGuide.width / 2;
+        startGuide.y += startGuide.height * 0.5;
+
+        var gameStart = false;
+        var level = 0;
+        THIS.input.on("pointerdown", function (pointer) {
+            if (!gameStart) {
+                gameStart = true;
+                console.log("start");
+                instruction.setVisible(false);
+                startGuide.setVisible(false);
+                createLevel(level, THIS);
+            }
+        })
+
+    }
+
+    var answer;
+    var texts = []
+
+    function update () {
+
+        for (var i = 0; i < texts.length; i++) {
+            if (i == answer) {
+                continue;
+            }
+            text = texts[i];
+            text.setAngularVelocity(0);
+            text.randomSleep--;
+            if (text.randomSleep < 0) {
+                var fx = parseInt(Math.random() * 2000 - 1000) / 200000;
+                var fy = parseInt(Math.random() * 2000 - 1000) / 200000;
+                text.applyForce(new Phaser.Math.Vector2(fx, fy));
+                text.randomSleep = parseInt(Math.random() * 150 + (fx + fy) * 3000);
+            }
+        }
+    }
+
+    var chars = ["老婆儿情人节快乐", "我永远只爱你一人", "祝你开心健康进步", "我们会努力幸福的"];
+
+    function createLevel(level, THIS) {
+        for (var i = 0; i < 55 + level * 15; i++) {
+            var index = parseInt(Math.random() * 8);
+            var x = parseInt(Math.random() * winW);
+            var y = parseInt(Math.random() * winH);
+            var text = THIS.add.text(x, y, chars[level][index]).setFontSize(FONT_SIZE);
+            // THIS.matter.setFriction(100, 500);
+            THIS.matter.add.gameObject(text);
+            text.setFriction(0, 0.01, 0);
+            text.setBounce(1);
+            text.setCollisionGroup(-1);
+            text.index = i;
+            if (i % 2 == 0) {
+                text.randomSleep = parseInt(Math.random() * 1) * 30;
+            }
+            else {
+                text.randomSleep = 0;
+            }
+            var hitArea = new Phaser.Geom.Rectangle(0,0,text.width,text.height);
+            text.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+            text.on("pointerdown", function function_name(argument) {
+                if (this.index == answer) {
+                    clearLevel();
+                    if (level + 1 == chars.length) {
+                        showLove(THIS);
+                    }
+                    else {
+                        createLevel(level + 1, THIS);
+                    }
+                }
+                else {
+                    console.log("wrong");
+                }
+            });
+
+            texts.push(text);
+        }
+        answer = parseInt(Math.random() * texts.length);
+    }
+
+    function clearLevel() {
+        while (texts.length > 0) {
+            text = texts.pop();
+            text.setVisible(false);
+            text.destroy();
+        }
+        answer = null;
+    }
+
+    function showLove(THIS) {
+        THIS.add.image(winW / 2, winH / 2, "win");
+    }
+    </script>
+</body>
+</html>
