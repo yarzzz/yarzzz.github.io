@@ -87,26 +87,26 @@
             var jack_cards = [];
             var jack_card_pos = [-160 * lenUnit, 0];
             jack_container.on('pointerdown', function () {
-            	// console.log('pointerdown');
-	        	jack_down = game.getTime();
-	        });
-	        jack_container.on('pointerout', function () {
-	        	jack_down = null;
-	        });
-	        jack_container.on('pointerup', function () {
-            	// console.log('pointerup');
-	            if (game.getTime() - jack_down > 500) {
-	                // 长按
+                // console.log('pointerdown');
+                jack_down = game.getTime();
+            });
+            jack_container.on('pointerout', function () {
+                jack_down = null;
+            });
+            jack_container.on('pointerup', function () {
+                // console.log('pointerup');
+                if (game.getTime() - jack_down > 500) {
+                    // 长按
                     if (jack_down == null ) {
-		            	return
-		            }
-		            for (var i = 0; i < jack_cards.length; i++) {
-		            	// console.log(jack_cards[i]);
-		            	jack_cards[i].setVisible(!jack_cards[i].visible);
-		            }
-	                jack_down = null;
-	            }
-	        });
+                        return
+                    }
+                    for (var i = 0; i < jack_cards.length; i++) {
+                        // console.log(jack_cards[i]);
+                        jack_cards[i].setVisible(!jack_cards[i].visible);
+                    }
+                    jack_down = null;
+                }
+            });
 
             // 设置侦探区域
             var detector_area = this.add.rectangle(0, 0, 450 * lenUnit, 250 * lenUnit, 0xc0c0c0);
@@ -132,61 +132,61 @@
             container.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains, true);
             this.input.setDraggable(container);
             container.on('pointerdown', function () {
-            	// console.log('行动', 'pointerdown', action_area_down);
-	            if (game.getTime() - action_area_down < 300) {
+                // console.log('行动', 'pointerdown', action_area_down);
+                if (game.getTime() - action_area_down < 300) {
                     // 双击
                     // console.log('行动', '双击');
-	                actions_random = true;
-		            for (var i = 0; i < 4; i++) {
-		                var n = parseInt(Math.random() * 2);
-		                actions[i][n].setVisible(true);
-		                actions[i][1 - n].setVisible(false);
-		            }
-		            action_area_down = null;
+                    actions_random = true;
+                    for (var i = 0; i < 4; i++) {
+                        var n = parseInt(Math.random() * 2);
+                        actions[i][n].setVisible(true);
+                        actions[i][1 - n].setVisible(false);
+                    }
+                    action_area_down = null;
                 }
                 else {
-                	// console.log('行动', game.getTime());
+                    // console.log('行动', game.getTime());
                     action_area_down = game.getTime();
                 }
-	        });
-	        container.on('dragleave', function () {
-	        	// console.log('行动', 'dragleave');
-	        	action_area_down = null;
-	        });
+            });
+            container.on('dragleave', function () {
+                // console.log('行动', 'dragleave');
+                action_area_down = null;
+            });
             container.on('pointerup', function () {
-            	// console.log('行动', 'pointerup', action_area_down);
-	            if (game.getTime() - action_area_down > 500) {
-	                // 长按
-	                // console.log('行动', '长按');
+                // console.log('行动', 'pointerup', action_area_down);
+                if (game.getTime() - action_area_down > 500) {
+                    // 长按
+                    // console.log('行动', '长按');
                     if (!actions_random) {
-                    	return;
+                        return;
                     }
                     if (action_area_down == null ) {
-		            	return
-		            }
-		            for (var i = 0; i < 4; i++) {
-		                for (var j = 0; j < 2; j++) {
-		                    actions[i][j].setVisible(!actions[i][j].visible);
-		                }
-		            }
-	                action_area_down = null;
-	            }
-	        });
+                        return
+                    }
+                    for (var i = 0; i < 4; i++) {
+                        for (var j = 0; j < 2; j++) {
+                            actions[i][j].setVisible(!actions[i][j].visible);
+                        }
+                    }
+                    action_area_down = null;
+                }
+            });
 
             // 画四个行动牌
             var action_names = [['action1', 'action1b'], ['action2', 'action2b'], 
             ['action3', 'action3b'], ['action4', 'action4b']]
             for (var i = 0; i < 4; i++) {
-            	actions.push([]);
-            	var x = (166 * i - 250) * lenUnit;
-            	var y = 0;
-            	for (var j = 0; j < 2; j++) {
-	            	var action = this.add.image(x, y, action_names[i][j]).setVisible(false);
-	            	action.setDisplaySize(150 * lenUnit, 150 * lenUnit);
-	            	// af.setVisible(false);
-	            	container.add(action);
-	            	actions[i].push(action);
-            	}
+                actions.push([]);
+                var x = (166 * i - 250) * lenUnit;
+                var y = 0;
+                for (var j = 0; j < 2; j++) {
+                    var action = this.add.image(x, y, action_names[i][j]).setVisible(false);
+                    action.setDisplaySize(150 * lenUnit, 150 * lenUnit);
+                    // af.setVisible(false);
+                    container.add(action);
+                    actions[i].push(action);
+                }
             }
 
             // 画出疑犯牌背
@@ -208,30 +208,30 @@
             container.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
             this.input.setDraggable(container);
             container.on('drag', function (pointer) {
-            	// console.log('drag');
+                // console.log('drag');
                 this.x = pointer.x;
                 this.y = pointer.y;
             });
             container.on('dragend', function (pointer) {
-            	// console.log('dragend');
+                // console.log('dragend');
                 this.x = turn_pos[0];
                 this.y = turn_pos[1];
             });
             container.on('drop', function (pointer, target) {
-            	// console.log(target);
-            	// console.log(target.name);
+                // console.log(target);
+                // console.log(target.name);
                 if (target.name == 'jack') {
-	                turn_num_n += 1;
-	                turn_num.text = turn_num_n + '';
-	                jack_num_n += 1;
-            		jack_num.text = jack_num_n + '';
-	            }
+                    turn_num_n += 1;
+                    turn_num.text = turn_num_n + '';
+                    jack_num_n += 1;
+                    jack_num.text = jack_num_n + '';
+                }
                 if (target.name == 'detector') {
-	                turn_num_n += 1;
-	                turn_num.text = turn_num_n + '';
-	                detector_num_n += 1;
-            		detector_num.text = detector_num_n + '';
-	            }
+                    turn_num_n += 1;
+                    turn_num.text = turn_num_n + '';
+                    detector_num_n += 1;
+                    detector_num.text = detector_num_n + '';
+                }
             });
 
             // 添加所有嫌犯牌
@@ -243,73 +243,73 @@
             container.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
             this.input.setDraggable(container);
             container.on('dragstart', function (pointer) {
-            	// console.log('drag');
-        		if (suspect_cards.length == 0) {
-        			return;
-        		}
-        		suspect_index = parseInt(Math.random() * suspect_cards.length);
-        		suspect_cards[suspect_index].setVisible(true);
-        		if (suspect_cards.length == 1) {
-        			suspect_bg.setVisible(false);
-        		}
+                // console.log('drag');
+                if (suspect_cards.length == 0) {
+                    return;
+                }
+                suspect_index = parseInt(Math.random() * suspect_cards.length);
+                suspect_cards[suspect_index].setVisible(true);
+                if (suspect_cards.length == 1) {
+                    suspect_bg.setVisible(false);
+                }
             });
             container.on('drag', function (pointer) {
-            	// console.log('drag');
-        		if (suspect_cards.length == 0) {
-        			return;
-        		}
+                // console.log('drag');
+                if (suspect_cards.length == 0) {
+                    return;
+                }
                 this.x = pointer.x;
                 this.y = pointer.y;
             });
             container.on('dragend', function (pointer) {
-            	// console.log('dragend');
-        		if (suspect_cards.length == 0) {
-        			return;
-        		}
+                // console.log('dragend');
+                if (suspect_cards.length == 0) {
+                    return;
+                }
                 this.x = suspect_pos[0];
                 this.y = suspect_pos[1];
                 for (var i = 0; i < suspect_cards.length; i++) {
-                	suspect_cards[i].setVisible(false);
+                    suspect_cards[i].setVisible(false);
                 }
                 if (suspect_cards.length > 0) {
-        			suspect_bg.setVisible(true);
-        		}
+                    suspect_bg.setVisible(true);
+                }
             });
             var THIS = this;
             container.on('drop', function (pointer, target) {
-            	// console.log(target);
-            	// console.log(target.name);
+                // console.log(target);
+                // console.log(target.name);
                 if (target.name == 'jack') {
-	                // console.log(suspect_cards[suspect_index]);
-	                var card = suspect_cards[suspect_index];
-	                suspect_cards.splice(suspect_index, 1);
-	                this.remove(card, true);
-	                var get_card_bg = THIS.add.image(jack_card_pos[0], jack_card_pos[1], 'sb').setDisplaySize(75 * lenUnit, 120 * lenUnit);
-	                var get_card = THIS.add.image(jack_card_pos[0], jack_card_pos[1], card.name).setDisplaySize(75 * lenUnit, 120 * lenUnit);
-	                jack_card_pos[0] += 80 * lenUnit;
-	                jack_container.add(get_card_bg);
-	                jack_container.add(get_card);
-	                jack_cards.push(get_card);
-	                for (var i = 0; i < jack_cards.length; i++) {
-	                	jack_cards[i].setVisible(false);
-	                }
-	            }
+                    // console.log(suspect_cards[suspect_index]);
+                    var card = suspect_cards[suspect_index];
+                    suspect_cards.splice(suspect_index, 1);
+                    this.remove(card, true);
+                    var get_card_bg = THIS.add.image(jack_card_pos[0], jack_card_pos[1], 'sb').setDisplaySize(75 * lenUnit, 120 * lenUnit);
+                    var get_card = THIS.add.image(jack_card_pos[0], jack_card_pos[1], card.name).setDisplaySize(75 * lenUnit, 120 * lenUnit);
+                    jack_card_pos[0] += 80 * lenUnit;
+                    jack_container.add(get_card_bg);
+                    jack_container.add(get_card);
+                    jack_cards.push(get_card);
+                    for (var i = 0; i < jack_cards.length; i++) {
+                        jack_cards[i].setVisible(false);
+                    }
+                }
                 if (target.name == 'detector') {
-	                // console.log(suspect_cards[suspect_index]);
-	                var card = suspect_cards[suspect_index];
-	                suspect_cards.splice(suspect_index, 1);
-	                this.remove(card, true);
-	                var get_card = THIS.add.image(detector_card_pos[0], detector_card_pos[1], card.name).setDisplaySize(75 * lenUnit, 120 * lenUnit);
-	                detector_card_pos[0] += 80 * lenUnit;
-	                detector_container.add(get_card);
-	            }
+                    // console.log(suspect_cards[suspect_index]);
+                    var card = suspect_cards[suspect_index];
+                    suspect_cards.splice(suspect_index, 1);
+                    this.remove(card, true);
+                    var get_card = THIS.add.image(detector_card_pos[0], detector_card_pos[1], card.name).setDisplaySize(75 * lenUnit, 120 * lenUnit);
+                    detector_card_pos[0] += 80 * lenUnit;
+                    detector_container.add(get_card);
+                }
             });
             suspect_names = ['s1', 's2', 's3', 's4', 's5', 's6', 's7', 's8', 's9']
             for (var i = 0; i < 9; i++) {
-            	var card = this.add.image(0, 0, suspect_names[i]).setDisplaySize(150 * lenUnit, 240 * lenUnit).setVisible(false);
-            	card.name = suspect_names[i];
-            	suspect_cards.push(card);
-            	container.add(card);
+                var card = this.add.image(0, 0, suspect_names[i]).setDisplaySize(150 * lenUnit, 240 * lenUnit).setVisible(false);
+                card.name = suspect_names[i];
+                suspect_cards.push(card);
+                container.add(card);
             }
             
             // 画上9张牌
@@ -373,17 +373,17 @@
                         }
                     });
                     container.on('drag', function (pointer) {
-                        // console.log("drag");
+                        console.log("drag");
                         this.x = pointer.x;
                         this.y = pointer.y;
                     });
                     container.on('dragend', function (pointer, dragX, dragY) {
                         // console.log("dragend");
                         if (this.x < 150 * lenUnit || this.x > 750 * lenUnit || 
-                        	this.y < 150 * lenUnit || this.y > 750 * lenUnit) {
-                        	this.x = (moving[0] * 200 + 250) * lenUnit;
-                        	this.y = (moving[1] * 200 + 250) * lenUnit;
-                        	return;
+                            this.y < 150 * lenUnit || this.y > 750 * lenUnit) {
+                            this.x = (moving[0] * 200 + 250) * lenUnit;
+                            this.y = (moving[1] * 200 + 250) * lenUnit;
+                            return;
                         }
                         this.x = (Math.round((this.x / lenUnit - 250) / 200) * 200 + 250) * lenUnit;
                         this.y = (Math.round((this.y / lenUnit - 250) / 200) * 200 + 250) * lenUnit;
@@ -413,11 +413,12 @@
             [825 * lenUnit, 250 * lenUnit], 
             [450 * lenUnit, 825 * lenUnit]];
             for (var i = 0; i < 3; i++) {
-            	detector = this.add.image(detector_positions[i][0], detector_positions[i][1], detector_names[i]);
-            	detector.setDisplaySize(100 * lenUnit, 100 * lenUnit);
-            	var hitArea = new Phaser.Geom.Rectangle(0, 0, 100 * lenUnit, 100 * lenUnit);
-                detector.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+                detector = this.add.sprite(detector_positions[i][0], detector_positions[i][1], detector_names[i]).setInteractive();
+                detector.setDisplaySize(100 * lenUnit, 100 * lenUnit);
                 this.input.setDraggable(detector);
+                detector.on('dragstart', function (pointer) {
+                    // console.log("dragstart");
+                });
                 detector.on('drag', function (pointer) {
                     // console.log("drag");
                     this.x = pointer.x;
@@ -426,7 +427,7 @@
                 detector.on('dragend', function (pointer) {
                     // console.log("drag");
                     if (pointer.x > 850 * lenUnit) {
-                    	this.x = 825 * lenUnit;
+                        this.x = 825 * lenUnit;
                     }
                 });
             }
