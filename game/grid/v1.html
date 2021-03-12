@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.21.0/dist/phaser.min.js"></script>
+</head>
+<body>
+    <script>
+    var winW = window.innerWidth;
+    var winH = window.innerHeight;
+    var lenUnit;
+    if (9 * winW > 16 * winH) {
+        lenUnit = winH / 900;
+    }
+    else {
+        lenUnit = winW / 1600;
+    }
+    console.log(lenUnit);
+
+    var config = {
+        type: Phaser.AUTO,
+        width: 1600 * lenUnit,
+        height: 900 * lenUnit,
+        backgroundColor: '#dfdfdf',
+        scene: {
+            preload: preload,
+            create: create,
+            update: update
+        }
+    };
+
+
+    var count = getQueryVariable("count");
+    if (!count) {
+        count = 5;
+    }
+    var bar_h = 800 / count;
+    var bar_h_half = bar_h / 2;
+    var bar_w = bar_h / 6;
+    var bar_w_half = bar_w / 2;
+
+    var BLUE_COLOR = 0x2222ff;
+    var RED_COLOR = 0xff2222;
+
+    var game = new Phaser.Game(config);
+    
+    function preload () {}
+    function create () {
+
+        // 制作网格
+        graphics = this.add.graphics({ fillStyle: { color: 0xaaaaaa} });
+        for (var i = 0; i <= count; i++) {
+            graphics.fillRect((50) * lenUnit, (50 - bar_w_half + i * bar_h) * lenUnit, 800 * lenUnit, bar_w * lenUnit);
+            graphics.fillRect((50 - bar_w_half + i * bar_h) * lenUnit, (50) * lenUnit, bar_w * lenUnit, 800 * lenUnit);
+        }
+        graphics.fillCircle(50 * lenUnit, 50 * lenUnit, bar_w_half * lenUnit);
+        graphics.fillCircle(850 * lenUnit, 50 * lenUnit, bar_w_half * lenUnit);
+        graphics.fillCircle(50 * lenUnit, 850 * lenUnit, bar_w_half * lenUnit);
+        graphics.fillCircle(850 * lenUnit, 850 * lenUnit, bar_w_half * lenUnit);
+
+        // 红色横
+        new_red_h(this);
+
+        // 红色竖
+        new_red_w(this);
+
+        // 蓝色横
+        new_blue_h(this);
+
+        // 蓝色竖
+        new_blue_w(this);
+    }
+    function update () {}
+
+    function new_red_h(m) {
+        bar = m.add.rectangle(1200 * lenUnit, 150 * lenUnit, bar_h * lenUnit, bar_w * lenUnit, RED_COLOR, 0.8).setInteractive();
+        m.input.setDraggable(bar);
+        bar.on('dragstart', function (pointer) {
+                    new_red_h(m)
+                });
+        bar.on('drag', function (pointer) {
+                    this.x = pointer.x;
+                    this.y = pointer.y;
+                });
+        bar.on('dragend', function (pointer) {
+                    console.log(this.x);
+                    if (this.x < 50 * lenUnit || this.x > 850 * lenUnit || this.y < 50 * lenUnit || this.y > 850 * lenUnit) {
+                        this.destroy();
+                    } else {
+                        x = this.x / lenUnit;
+                        x = Math.round((x - 50 - bar_h_half) / bar_h) * bar_h + 50 + bar_h_half;
+                        this.x = x * lenUnit;
+                        y = this.y / lenUnit;
+                        y = Math.round((y - 50) / bar_h) * bar_h + 50;
+                        this.y = y * lenUnit;
+                    }
+                });
+    }
+
+    function new_red_w(m) {
+        bar = m.add.rectangle(1200 * lenUnit, 350 * lenUnit, bar_w * lenUnit, bar_h * lenUnit, RED_COLOR, 0.8).setInteractive();
+        m.input.setDraggable(bar);
+        bar.on('dragstart', function (pointer) {
+                    new_red_w(m)
+                });
+        bar.on('drag', function (pointer) {
+                    this.x = pointer.x;
+                    this.y = pointer.y;
+                });
+        bar.on('dragend', function (pointer) {
+                    console.log(this.x);
+                    if (this.x < 50 * lenUnit || this.x > 850 * lenUnit || this.y < 50 * lenUnit || this.y > 850 * lenUnit) {
+                        this.destroy();
+                    } else {
+                        x = this.x / lenUnit;
+                        x = Math.round((x - 50) / bar_h) * bar_h + 50;
+                        this.x = x * lenUnit;
+                        y = this.y / lenUnit;
+                        y = Math.round((y - 50 - bar_h_half) / bar_h) * bar_h + 50 + bar_h_half;
+                        this.y = y * lenUnit;
+                    }
+                });
+    }
+
+    function new_blue_h(m) {
+        bar = m.add.rectangle(1200 * lenUnit, 550 * lenUnit, bar_h * lenUnit, bar_w * lenUnit, BLUE_COLOR, 0.8).setInteractive();
+        m.input.setDraggable(bar);
+        bar.on('dragstart', function (pointer) {
+                    new_blue_h(m)
+                });
+        bar.on('drag', function (pointer) {
+                    this.x = pointer.x;
+                    this.y = pointer.y;
+                });
+        bar.on('dragend', function (pointer) {
+                    console.log(this.x);
+                    if (this.x < 50 * lenUnit || this.x > 850 * lenUnit || this.y < 50 * lenUnit || this.y > 850 * lenUnit) {
+                        this.destroy();
+                    } else {
+                        x = this.x / lenUnit;
+                        x = Math.round((x - 50 - bar_h_half) / bar_h) * bar_h + 50 + bar_h_half;
+                        this.x = x * lenUnit;
+                        y = this.y / lenUnit;
+                        y = Math.round((y - 50) / bar_h) * bar_h + 50;
+                        this.y = y * lenUnit;
+                    }
+                });
+    }
+
+    function new_blue_w(m) {
+        bar = m.add.rectangle(1200 * lenUnit, 750 * lenUnit, bar_w * lenUnit, bar_h * lenUnit, BLUE_COLOR, 0.8).setInteractive();
+        m.input.setDraggable(bar);
+        bar.on('dragstart', function (pointer) {
+                    new_blue_w(m)
+                });
+        bar.on('drag', function (pointer) {
+                    this.x = pointer.x;
+                    this.y = pointer.y;
+                });
+        bar.on('dragend', function (pointer) {
+                    console.log(this.x);
+                    if (this.x < 50 * lenUnit || this.x > 850 * lenUnit || this.y < 50 * lenUnit || this.y > 850 * lenUnit) {
+                        this.destroy();
+                    } else {
+                        x = this.x / lenUnit;
+                        x = Math.round((x - 50) / bar_h) * bar_h + 50;
+                        this.x = x * lenUnit;
+                        y = this.y / lenUnit;
+                        y = Math.round((y - 50 - bar_h_half) / bar_h) * bar_h + 50 + bar_h_half;
+                        this.y = y * lenUnit;
+                    }
+                });
+    }
+
+    function getQueryVariable(variable)
+    {
+       var query = window.location.search.substring(1);
+       var vars = query.split("&");
+       for (var i=0;i<vars.length;i++) {
+               var pair = vars[i].split("=");
+               if(pair[0] == variable){return pair[1];}
+       }
+       return(false);
+    }
+    </script>
+</body>
+</html>
