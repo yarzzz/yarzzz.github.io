@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<!-- <meta name="viewport" content="user-scalable=no" /> -->
+	<title>composer demo</title>
+<style type="text/css">
+.input-area {
+	/*height: 100%;*/
+	vertical-align: top;
+	display: inline-block;
+}
+</style>
+</head>
+<body>
+	<canvas id="musicPaper" width="957" height="600" style="border: 1px solid black;">
+		您的浏览器不支持 HTML5 canvas 标签
+	</canvas>
+	<div class="input-area">
+		<label><input type="checkbox" name="checkClef" class="checkClef" value="G" title="G谱表" checked="checked">G谱表</label>&emsp;
+		<label><input type="checkbox" name="checkClef" class="checkClef" value="C" title="C谱表">C谱表</label>&emsp;
+		<label><input type="checkbox" name="checkClef" class="checkClef" value="F" title="F谱表" checked="checked">F谱表</label>
+		<br>
+		<input type="text" id="inputTs" value="4/4">
+		<br>
+		<textarea id="inputArea" rows="20" cols="40" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">
+2c4# 4a3 4c6b  
+4e4 8f5/c5 16f4/c4 4e4 16c5  4e4
+4e4 2a4# 4g5b 
+2f4 2f5# 
+1c5b 
+4e4 8a4# 8c5# 4g5b 4b4 
+4e4 16a4# 8c5# 16d5# 4g5b 4b4 
+4e4 16a4# 32c5# 16a4# 32c5# 16e4# 4g5b 4b4 
+4e4 16c5# 16e5b 8a4# 8b4 8a4 4g5b 
+4e4 8.a4# 16c5# 4g5b 4b4 
+4e4 4.f5# 8f5# 4g5b 
+4e4 8g4# 4.f5# 4g5b
+		</textarea>
+		<br>
+		<h5 style="margin: 10px auto 0 auto;">Tips</h5>
+		<p>
+			1. 代码格式：<br>
+			<pre>时值（符点）音名（升降号）/音名2（升降号）/... </pre>
+			如：符点4分音符c4 与 4分音符a3升半音 <br>
+			记为：<pre>4.c4/a3# </pre>
+			2. 每组音之间用空格分隔
+		</p>
+	</div>
+<script type="text/javascript" src="config.js"></script>
+<script type="text/javascript" src="model.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="test.js"></script>
+</body>
+</html>
