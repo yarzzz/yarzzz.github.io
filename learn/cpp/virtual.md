@@ -2,12 +2,12 @@
 
 如果父类不实现，要加 = 0
 
-''''cpp
+```cpp
 virtual int add(int a, int b) = 0;
-''''
+```
 
 否则必须实现
 
-''''cpp
+```cpp
 virtual int add(int a, int b) { return a + b; }
-''''
+```
